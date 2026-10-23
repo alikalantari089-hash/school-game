@@ -1,0 +1,2565 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>قلمرو اعداد</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Vazirmatn', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #0a0612;
+    color: #fff;
+}
+
+/* ================= صفحه‌ی ورود ================= */
+#loginScreen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 2000;
+    background:
+        radial-gradient(ellipse at center, rgba(120, 80, 30, 0.4) 0%, transparent 70%),
+        linear-gradient(180deg, #1a0f08 0%, #2d1a0a 25%, #3d2510 50%, #2a1708 75%, #150a03 100%);
+    overflow: hidden;
+}
+
+#loginScreen.hidden { display: none; }
+
+.login-box {
+    position: relative;
+    z-index: 10;
+    width: min(90vw, 420px);
+    padding: clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px);
+    background: radial-gradient(ellipse at center, rgba(60,35,15,0.95) 0%, rgba(30,15,5,0.9) 70%, rgba(20,10,3,0.85) 100%);
+    border: 3px solid #ffd93d;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow:
+        0 0 60px rgba(255, 215, 61, 0.4),
+        0 20px 60px rgba(0, 0, 0, 0.9);
+}
+
+.login-icon {
+    font-size: clamp(50px, 12vw, 80px);
+    margin-bottom: 12px;
+    display: inline-block;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 61, 0.8));
+    animation: loginIconFloat 3s ease-in-out infinite;
+}
+
+@keyframes loginIconFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.login-box h2 {
+    font-size: clamp(20px, 5vw, 28px);
+    color: #ffd93d;
+    margin-bottom: 8px;
+    text-shadow: 0 0 20px rgba(255, 217, 61, 0.9), 0 3px 8px rgba(0, 0, 0, 1);
+}
+
+.login-box .login-subtitle {
+    font-size: clamp(12px, 3vw, 15px);
+    color: #f4d58d;
+    margin-bottom: 24px;
+    line-height: 1.8;
+}
+
+.login-input-wrap {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.login-input {
+    width: 100%;
+    padding: clamp(14px, 3.5vw, 18px) clamp(14px, 3.5vw, 20px);
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #8b5a2b;
+    border-radius: 14px;
+    color: #fff;
+    font-family: inherit;
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: clamp(2px, 1vw, 6px);
+    direction: ltr;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.login-input::placeholder {
+    color: rgba(244, 213, 141, 0.4);
+    letter-spacing: 0;
+    font-size: clamp(12px, 3vw, 15px);
+    font-weight: 700;
+    direction: rtl;
+}
+
+.login-input:focus {
+    border-color: #ffd93d;
+    box-shadow: 0 0 25px rgba(255, 215, 61, 0.5);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.login-error {
+    min-height: 24px;
+    font-size: clamp(11px, 2.8vw, 14px);
+    font-weight: 900;
+    color: #f87171;
+    margin-bottom: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-shadow: 0 0 15px rgba(248, 113, 113, 0.8);
+}
+
+.login-error.show { opacity: 1; }
+
+.login-box .btn { margin: 0 auto; }
+
+.login-info {
+    margin-top: 20px;
+    font-size: clamp(10px, 2.5vw, 12px);
+    color: #a89070;
+    line-height: 1.8;
+}
+
+/* ================= صفحه‌ی شروع ================= */
+#startScreen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow: hidden;
+    text-align: center;
+    z-index: 1000;
+    background:
+        radial-gradient(ellipse at center, rgba(120, 80, 30, 0.4) 0%, transparent 70%),
+        linear-gradient(180deg, #1a0f08 0%, #2d1a0a 25%, #3d2510 50%, #2a1708 75%, #150a03 100%);
+    transition: opacity 0.5s ease;
+}
+
+#startScreen.hidden { display: none; }
+
+.frame {
+    position: absolute;
+    inset: 8px;
+    border: 4px solid #5a3818;
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 3px #8b5a2b, inset 0 0 40px rgba(0,0,0,0.8);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(20px, 5vw, 40px) clamp(20px, 5vw, 50px);
+    width: min(90vw, 640px);
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    background: radial-gradient(ellipse at center, rgba(60,35,15,0.9) 0%, rgba(30,15,5,0.85) 70%, rgba(20,10,3,0.7) 100%);
+    border: 3px solid #8b5a2b;
+}
+
+h1 {
+    font-size: clamp(26px, 6vw, 52px);
+    font-weight: 900;
+    color: #ffd93d;
+    margin-bottom: 14px;
+    text-shadow: 0 0 20px rgba(255,217,61,0.9), 0 3px 0 #8b4500, 0 6px 12px rgba(0,0,0,1);
+}
+
+.subtitle {
+    font-size: clamp(12px, 3vw, 16px);
+    color: #f4d58d;
+    margin-bottom: 14px;
+    font-weight: 700;
+    line-height: 1.8;
+    max-width: 480px;
+}
+
+.welcome-user {
+    display: inline-block;
+    font-size: clamp(13px, 3.2vw, 17px);
+    font-weight: 900;
+    color: #fff;
+    background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+    border: 2px solid #4ade80;
+    padding: clamp(6px, 1.5vw, 10px) clamp(16px, 4vw, 28px);
+    border-radius: 50px;
+    margin-bottom: 18px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+    box-shadow: 0 0 25px rgba(74, 222, 128, 0.6), inset 0 2px 0 rgba(255,255,255,0.3);
+    animation: welcomePulse 2s ease-in-out infinite;
+}
+
+@keyframes welcomePulse {
+    0%, 100% { box-shadow: 0 0 25px rgba(74, 222, 128, 0.6), inset 0 2px 0 rgba(255,255,255,0.3); }
+    50% { box-shadow: 0 0 40px rgba(74, 222, 128, 1), inset 0 2px 0 rgba(255,255,255,0.5); }
+}
+
+.school-tag {
+    display: inline-block;
+    font-size: clamp(11px, 2.5vw, 14px);
+    font-weight: 700;
+    color: #ffd93d;
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 2px solid #8b5a2b;
+    padding: 6px 18px;
+    border-radius: 50px;
+    margin-bottom: clamp(16px, 4vw, 28px);
+}
+
+.menu-buttons { display: flex; flex-direction: column; gap: 12px; align-items: center; width: 100%; }
+
+.btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: min(80vw, 280px);
+    padding: clamp(12px, 3vw, 16px) clamp(20px, 4vw, 40px);
+    border: none;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: clamp(14px, 3vw, 17px);
+    font-weight: 900;
+    color: #fff;
+    cursor: pointer;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+    transition: all 0.1s ease;
+    touch-action: manipulation;
+}
+
+.btn .icon { font-size: clamp(18px, 4vw, 22px); }
+.btn:active { transform: translateY(3px); }
+.btn.green { background: linear-gradient(180deg, #4ade80 0%, #22c55e 45%, #16a34a 100%); box-shadow: 0 6px 0 #14532d; }
+.btn.green:active { box-shadow: 0 2px 0 #14532d; }
+.btn.blue { background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 45%, #1d4ed8 100%); box-shadow: 0 6px 0 #1e3a8a; }
+.btn.blue:active { box-shadow: 0 2px 0 #1e3a8a; }
+.btn.orange { background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 45%, #d97706 100%); box-shadow: 0 6px 0 #78350f; }
+.btn.orange:active { box-shadow: 0 2px 0 #78350f; }
+.btn.red { background: linear-gradient(180deg, #f87171 0%, #dc2626 45%, #991b1b 100%); box-shadow: 0 6px 0 #7f1d1d; }
+.btn.red:active { box-shadow: 0 2px 0 #7f1d1d; }
+
+/* ================= صفحه‌ی بازی ================= */
+#gameScreen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    background: #1a3a2a;
+    touch-action: none;
+    overflow: hidden;
+}
+
+#gameScreen.active { display: block; }
+
+#gameCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+/* HUD بالا */
+#topHUD {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: clamp(50px, 10vw, 70px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(6px, 1.5vw, 16px);
+    background: linear-gradient(180deg, rgba(20,10,5,0.95) 0%, rgba(20,10,5,0.7) 70%, transparent 100%);
+    z-index: 100;
+    pointer-events: none;
+}
+
+.hud-left, .hud-right { display: flex; gap: clamp(4px, 1vw, 10px); pointer-events: auto; }
+
+.resource {
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, 1vw, 8px);
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 2px solid #8b5a2b;
+    border-radius: 50px;
+    padding: clamp(3px, 1vw, 6px) clamp(8px, 2vw, 16px);
+    font-weight: 900;
+    font-size: clamp(10px, 2.5vw, 14px);
+    color: #ffd93d;
+    min-width: clamp(60px, 15vw, 90px);
+    justify-content: center;
+    transition: transform 0.15s ease;
+}
+
+.resource.pop { transform: scale(1.15); }
+.resource .icon { font-size: clamp(13px, 3vw, 18px); }
+.resource .val { color: #fff; }
+
+#minimap {
+    position: absolute;
+    top: clamp(55px, 11vw, 80px);
+    left: clamp(6px, 1.5vw, 16px);
+    width: clamp(80px, 20vw, 140px);
+    height: clamp(60px, 15vw, 100px);
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #8b5a2b;
+    border-radius: 8px;
+    z-index: 100;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+#minimap canvas { width: 100%; height: 100%; display: block; }
+
+#sideCtrl {
+    position: absolute;
+    top: clamp(55px, 11vw, 80px);
+    right: clamp(6px, 1.5vw, 16px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(4px, 1vw, 10px);
+    z-index: 100;
+}
+
+.side-btn {
+    width: clamp(36px, 9vw, 48px);
+    height: clamp(36px, 9vw, 48px);
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 2px solid #8b5a2b;
+    border-radius: 10px;
+    color: #ffd93d;
+    font-size: clamp(16px, 4vw, 22px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+}
+
+.side-btn:active { transform: scale(0.92); }
+
+/* ============ نوار پایین (ثابت) ============ */
+#bottomBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: clamp(70px, 15vw, 100px);
+    background: linear-gradient(0deg, rgba(20,10,5,0.98) 0%, rgba(20,10,5,0.92) 70%, transparent 100%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: clamp(4px, 1vw, 10px);
+    gap: clamp(4px, 1vw, 10px);
+    padding-bottom: max(clamp(4px, 1vw, 10px), env(safe-area-inset-bottom, 0));
+}
+
+#bottomTabs {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    height: 100%;
+    gap: clamp(4px, 1vw, 10px);
+}
+
+.tab-btn {
+    flex: 1;
+    max-width: 110px;
+    height: 100%;
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 2px solid #8b5a2b;
+    border-radius: 12px;
+    color: #ffd93d;
+    font-family: inherit;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    touch-action: manipulation;
+}
+
+.tab-btn:active { transform: scale(0.95); }
+.tab-btn .tab-icon { font-size: clamp(20px, 5vw, 26px); }
+.tab-btn .tab-label { font-size: clamp(9px, 2vw, 11px); }
+
+/* ============ فروشگاه (بالای نوار پایین) ============ */
+#shopView {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    padding: clamp(6px, 1.5vw, 12px);
+    gap: clamp(6px, 1.5vw, 10px);
+    background: linear-gradient(0deg, rgba(20,10,5,0.99) 0%, rgba(20,10,5,0.96) 100%);
+    border-top: 2px solid #8b5a2b;
+    border-radius: 16px 16px 0 0;
+    max-height: 45vh;
+    overflow-y: auto;
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.9);
+}
+
+#shopView.show { display: flex; }
+
+.shop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(4px, 1vw, 8px);
+    flex-wrap: wrap;
+}
+
+.shop-back-btn {
+    background: linear-gradient(180deg, #94a3b8 0%, #475569 100%);
+    border: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: clamp(10px, 2.3vw, 13px);
+    font-weight: 900;
+    padding: clamp(5px, 1.2vw, 8px) clamp(10px, 2vw, 16px);
+    border-radius: 8px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.shop-cat-tabs { display: flex; gap: 6px; flex: 1; justify-content: center; flex-wrap: wrap; }
+
+.cat-btn {
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 2px solid #8b5a2b;
+    color: #ffd93d;
+    font-family: inherit;
+    font-size: clamp(10px, 2.3vw, 12px);
+    font-weight: 900;
+    padding: clamp(5px, 1.2vw, 8px) clamp(8px, 2vw, 16px);
+    border-radius: 8px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.cat-btn.active { border-color: #ffd93d; background: linear-gradient(180deg, #5a3818 0%, #2d1a0a 100%); }
+
+.shop-content {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1.5vw, 10px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: clamp(80px, 18vw, 100px);
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.shop-item {
+    flex-shrink: 0;
+    width: clamp(70px, 18vw, 90px);
+    height: clamp(70px, 18vw, 90px);
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 2px solid #8b5a2b;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    position: relative;
+    touch-action: manipulation;
+}
+
+.shop-item:active { transform: scale(0.95); }
+.shop-item.selected { border-color: #ffd93d; }
+.shop-item .emoji { font-size: clamp(24px, 6vw, 32px); }
+.shop-item .name { font-size: clamp(8px, 2vw, 10px); font-weight: 900; color: #ffd93d; text-align: center; line-height: 1.1; }
+.shop-item .price { font-size: clamp(8px, 2vw, 10px); color: #fff; background: rgba(0,0,0,0.6); border-radius: 8px; padding: 0 4px; }
+.shop-item .count-badge { position: absolute; top: -4px; right: -4px; background: linear-gradient(180deg, #ffd93d, #ff8c00); color: #1a0f08; font-size: clamp(9px, 2vw, 11px); font-weight: 900; padding: 1px 5px; border-radius: 8px; border: 1px solid #1a0f08; }
+.shop-item.locked { opacity: 0.5; cursor: not-allowed; }
+.shop-item.locked-by-guide { filter: grayscale(0.8) brightness(0.7); cursor: not-allowed; }
+.shop-item.locked-by-guide::before { content: '🔒'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: clamp(28px, 8vw, 45px); z-index: 10; pointer-events: none; }
+.shop-item.limit-reached { filter: grayscale(0.6) brightness(0.7); cursor: not-allowed; }
+.shop-item.limit-reached::before { content: '📦'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: clamp(24px, 7vw, 38px); z-index: 10; pointer-events: none; }
+.shop-item.special { border-color: #a855f7; background: linear-gradient(180deg, #4a2a6a 0%, #1a0f2a 100%); }
+.shop-item.coming-locked { width: clamp(140px, 35vw, 180px); background: linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 100%); border-color: #6b7280; cursor: not-allowed; }
+.shop-item.coming-locked .name { color: #cbd5e1; font-size: clamp(8px, 2vw, 10px); padding: 0 3px; }
+
+/* Hint */
+#hint {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20,10,5,0.95);
+    border: 2px solid #ffd93d;
+    border-radius: 14px;
+    padding: clamp(12px, 3vw, 20px) clamp(16px, 4vw, 32px);
+    font-size: clamp(12px, 3vw, 16px);
+    font-weight: 900;
+    color: #ffd93d;
+    z-index: 200;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-align: center;
+    max-width: 85vw;
+}
+
+#hint.show { opacity: 1; }
+
+/* منوی ساختمون */
+#actionMenu {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    gap: clamp(4px, 1vw, 8px);
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 2px solid #ffd93d;
+    border-radius: 14px;
+    padding: clamp(8px, 2vw, 12px);
+    z-index: 300;
+    min-width: clamp(170px, 45vw, 220px);
+    max-width: 90vw;
+    transform: translate(-50%, -100%);
+}
+
+#actionMenu.show { display: flex; }
+
+.menu-header {
+    text-align: center;
+    font-size: clamp(11px, 2.8vw, 14px);
+    font-weight: 900;
+    color: #ffd93d;
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+    border-bottom: 2px solid rgba(255,215,61,0.3);
+}
+
+.menu-header .lvl-badge {
+    display: inline-block;
+    background: rgba(255,215,61,0.2);
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-size: clamp(9px, 2vw, 11px);
+}
+
+.menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: clamp(8px, 2vw, 10px) clamp(10px, 2.5vw, 14px);
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: clamp(11px, 2.8vw, 14px);
+    font-weight: 900;
+    color: #fff;
+    cursor: pointer;
+    text-align: right;
+    touch-action: manipulation;
+}
+
+.menu-btn:active { transform: scale(0.96); }
+.menu-btn .m-icon { font-size: clamp(14px, 3.5vw, 18px); }
+.menu-btn .m-price { margin-right: auto; font-size: clamp(10px, 2.5vw, 12px); background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 6px; color: #ffd93d; }
+
+.menu-btn.upgrade { background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%); }
+.menu-btn.upgrade.locked { background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%); cursor: not-allowed; opacity: 0.8; }
+.menu-btn.army { background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%); }
+.menu-btn.quiz { background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); }
+.menu-btn.sell { background: linear-gradient(180deg, #f87171 0%, #b91c1c 100%); }
+.menu-btn.close-menu { background: linear-gradient(180deg, #94a3b8 0%, #475569 100%); }
+
+/* مودال‌ها */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.modal-overlay.hidden { display: none; }
+
+.tutorial-box {
+    width: min(90vw, 520px);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: clamp(20px, 5vw, 40px) clamp(18px, 5vw, 45px);
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 3px solid #ffd93d;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.tutorial-icon { font-size: clamp(50px, 12vw, 90px); margin-bottom: 12px; display: inline-block; }
+.tutorial-box h2 { font-size: clamp(20px, 5vw, 30px); color: #ffd93d; margin-bottom: 16px; }
+.tutorial-text { font-size: clamp(12px, 3vw, 16px); color: #f4d58d; line-height: 2; margin-bottom: 20px; }
+.tutorial-text b { color: #ffd93d; font-size: clamp(13px, 3.2vw, 18px); }
+.tutorial-box .btn { margin: 0 auto; }
+
+.trade-box {
+    width: min(90vw, 480px);
+    padding: clamp(20px, 5vw, 32px);
+    background: linear-gradient(180deg, #1a3a2a 0%, #0a1f0a 100%);
+    border: 3px solid #4ade80;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.trade-box h2 { font-size: clamp(18px, 4.5vw, 26px); color: #86efac; margin-bottom: 8px; }
+.trade-subtitle { font-size: clamp(11px, 2.8vw, 14px); color: #a7f3d0; margin-bottom: 20px; }
+.trade-balance { background: rgba(0,0,0,0.4); border: 2px solid rgba(74,222,128,0.4); border-radius: 12px; padding: clamp(8px, 2vw, 12px); margin-bottom: 20px; font-size: clamp(11px, 2.8vw, 14px); font-weight: 900; display: flex; justify-content: space-around; gap: 8px; flex-wrap: wrap; }
+.trade-balance span { color: #86efac; }
+.trade-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.trade-option { display: flex; align-items: center; justify-content: space-between; padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 20px); background: linear-gradient(180deg, #2a5a3a 0%, #1a3a2a 100%); border: 2px solid #4ade80; border-radius: 12px; font-family: inherit; font-size: clamp(12px, 3vw, 16px); font-weight: 900; color: #fff; cursor: pointer; touch-action: manipulation; }
+.trade-option:disabled { opacity: 0.4; cursor: not-allowed; }
+.trade-option .trade-cost { color: #86efac; font-size: clamp(11px, 2.5vw, 14px); }
+.trade-option .trade-give { color: #ffd93d; font-size: clamp(11px, 2.5vw, 14px); }
+
+.coming-soon-box {
+    width: min(90vw, 420px);
+    padding: clamp(24px, 5vw, 40px);
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 3px solid #ffd93d;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.coming-soon-icon { font-size: clamp(50px, 12vw, 80px); margin-bottom: 12px; display: inline-block; }
+.coming-soon-box h2 { font-size: clamp(20px, 5vw, 28px); color: #ffd93d; margin-bottom: 12px; }
+.coming-soon-box p { font-size: clamp(12px, 3vw, 15px); color: #f4d58d; line-height: 2; margin-bottom: 20px; }
+
+/* مودال ارتش سه‌بعدی */
+#armyModal { padding: 0; background: radial-gradient(circle at center, #0a0f1a 0%, #020408 100%); }
+
+.army-3d-scene { position: absolute; inset: 0; overflow: hidden; touch-action: none; }
+.army-3d-scene canvas { display: block; width: 100%; height: 100%; }
+
+.army-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: clamp(8px, 2vw, 16px) clamp(8px, 2vw, 20px);
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.6) 70%, transparent 100%);
+    flex-wrap: wrap;
+    pointer-events: none;
+}
+
+.army-hud > * { pointer-events: auto; }
+
+.army-title-3d { font-size: clamp(14px, 3.5vw, 24px); color: #93c5fd; display: flex; align-items: center; gap: 6px; font-weight: 900; }
+.army-title-3d .title-icon { font-size: clamp(20px, 5vw, 32px); }
+
+.army-stats-3d { display: flex; gap: clamp(4px, 1vw, 10px); flex-wrap: wrap; }
+.army-stat-box-3d { background: rgba(0, 0, 0, 0.6); border: 2px solid rgba(96, 165, 250, 0.5); border-radius: 10px; padding: clamp(3px, 1vw, 8px) clamp(6px, 1.5vw, 16px); font-size: clamp(10px, 2.4vw, 14px); font-weight: 900; color: #fff; display: flex; align-items: center; gap: 4px; }
+.army-stat-box-3d .stat-label { color: #93c5fd; font-size: clamp(9px, 2vw, 12px); }
+.army-stat-box-3d .stat-value { color: #fff; font-size: clamp(11px, 2.6vw, 16px); }
+.army-stat-box-3d.capacity .stat-value { color: #4ade80; }
+.army-stat-box-3d.coins .stat-value { color: #ffd93d; }
+.army-stat-box-3d.power .stat-value { color: #f87171; }
+
+.army-close-btn-3d { background: linear-gradient(180deg, #f87171 0%, #b91c1c 100%); border: none; color: #fff; font-family: inherit; font-size: clamp(10px, 2.5vw, 14px); font-weight: 900; padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2.5vw, 22px); border-radius: 10px; cursor: pointer; touch-action: manipulation; }
+.army-close-btn-3d:active { transform: scale(0.95); }
+
+.army-bottom-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: linear-gradient(0deg, rgba(15, 23, 42, 0.98) 0%, rgba(15, 23, 42, 0.85) 70%, transparent 100%);
+    padding: clamp(8px, 2vw, 16px);
+    display: flex;
+    gap: clamp(6px, 1.5vw, 12px);
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: max(clamp(8px, 2vw, 16px), env(safe-area-inset-bottom, 0));
+}
+
+.unit-info-card {
+    flex-shrink: 0;
+    width: clamp(140px, 38vw, 180px);
+    background: linear-gradient(180deg, rgba(30, 58, 138, 0.7) 0%, rgba(15, 23, 42, 0.95) 100%);
+    border: 2px solid var(--unit-color, #3b82f6);
+    border-radius: 12px;
+    padding: clamp(6px, 1.5vw, 10px);
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.unit-info-card:active { transform: scale(0.97); }
+.unit-info-card.selected { border-color: #ffd93d; background: linear-gradient(180deg, rgba(120, 53, 15, 0.7) 0%, rgba(30, 15, 5, 0.95) 100%); }
+
+.unit-info-card .uic-header { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid rgba(96, 165, 250, 0.3); }
+.unit-info-card .uic-icon { font-size: clamp(14px, 3.5vw, 20px); }
+.unit-info-card .uic-name { font-size: clamp(10px, 2.4vw, 12px); font-weight: 900; color: #fff; }
+
+.unit-info-card .uic-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; margin-bottom: 4px; }
+.unit-info-card .uic-stat { background: rgba(0,0,0,0.5); border-radius: 5px; padding: 2px; text-align: center; font-size: clamp(8px, 2vw, 10px); font-weight: 900; color: #fff; }
+.unit-info-card .uic-stat.hp .v { color: #f87171; }
+.unit-info-card .uic-stat.atk .v { color: #fbbf24; }
+.unit-info-card .uic-stat.spd .v { color: #4ade80; }
+
+.unit-info-card .uic-ability { font-size: clamp(8px, 1.8vw, 9px); color: #e9d5ff; background: rgba(168, 85, 247, 0.15); border-radius: 5px; padding: 3px; text-align: center; margin-bottom: 4px; min-height: 26px; display: flex; align-items: center; justify-content: center; line-height: 1.2; }
+
+.unit-info-card .uic-count-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid rgba(74, 222, 128, 0.5); border-radius: 6px; padding: 2px 6px; margin-bottom: 4px; }
+.unit-info-card .uic-count-row .lbl { font-size: clamp(8px, 2vw, 10px); color: #86efac; }
+.unit-info-card .uic-count-row .val { font-size: clamp(11px, 2.8vw, 14px); font-weight: 900; color: #4ade80; }
+.unit-info-card .uic-count-row .prc { font-size: clamp(9px, 2.2vw, 11px); font-weight: 900; color: #ffd93d; }
+
+.unit-info-card .uic-buy { width: 100%; padding: clamp(6px, 1.5vw, 8px); border: none; border-radius: 6px; font-family: inherit; font-size: clamp(10px, 2.4vw, 12px); font-weight: 900; color: #fff; cursor: pointer; background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%); touch-action: manipulation; }
+.unit-info-card .uic-buy:disabled { background: linear-gradient(180deg, #4b5563 0%, #374151 100%); cursor: not-allowed; opacity: 0.7; }
+
+.unit-info-card[data-unit="knight"] { --unit-color: #60a5fa; }
+.unit-info-card[data-unit="archer"] { --unit-color: #4ade80; }
+.unit-info-card[data-unit="ogre"] { --unit-color: #f87171; }
+.unit-info-card[data-unit="pythagoras"] { --unit-color: #fbbf24; }
+
+/* کوییز */
+.quiz-box {
+    width: min(92vw, 620px);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #2a1548 0%, #1a0f2a 100%);
+    border: 3px solid #ffd93d;
+    border-radius: 20px;
+    direction: rtl;
+}
+
+.quiz-header {
+    background: linear-gradient(180deg, #5a3818 0%, #3d2510 100%);
+    padding: clamp(10px, 2.5vw, 18px) clamp(12px, 3vw, 24px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ffd93d;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.quiz-title { font-size: clamp(12px, 3vw, 18px); font-weight: 900; color: #ffd93d; }
+.quiz-stats { display: flex; gap: 4px; flex-wrap: wrap; }
+.quiz-stat { background: rgba(0, 0, 0, 0.6); padding: clamp(3px, 1vw, 6px) clamp(6px, 1.5vw, 14px); border-radius: 16px; font-size: clamp(10px, 2.5vw, 14px); font-weight: 900; color: #ffd93d; border: 1px solid rgba(255, 215, 61, 0.4); }
+.quiz-question { font-size: clamp(24px, 7vw, 42px); font-weight: 900; color: #fff; text-align: center; padding: clamp(16px, 4vw, 35px) clamp(10px, 3vw, 20px); direction: ltr; background: rgba(0, 0, 0, 0.4); margin: clamp(12px, 3vw, 24px) clamp(12px, 3vw, 24px) 0; border-radius: 14px; border: 2px solid rgba(255, 215, 61, 0.4); }
+.quiz-question sup { font-size: 0.55em; vertical-align: super; color: #ffd93d; }
+
+.quiz-options {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: clamp(6px, 1.5vw, 14px);
+    padding: clamp(12px, 3vw, 24px);
+    direction: ltr;
+}
+
+.quiz-opt {
+    display: block;
+    width: 100%;
+    background: linear-gradient(180deg, #3d2510 0%, #1a0f08 100%);
+    border: 2px solid #8b5a2b;
+    border-radius: 12px;
+    padding: clamp(10px, 2.5vw, 20px);
+    font-family: inherit;
+    font-size: clamp(16px, 4vw, 26px);
+    font-weight: 900;
+    color: #ffd93d;
+    cursor: pointer;
+    direction: ltr;
+    touch-action: manipulation;
+}
+
+.quiz-opt:active { transform: scale(0.97); }
+.quiz-opt.correct { background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%); border-color: #4ade80; color: #fff; }
+.quiz-opt.wrong { background: linear-gradient(180deg, #f87171 0%, #b91c1c 100%); border-color: #f87171; color: #fff; }
+
+.quiz-feedback { text-align: center; font-size: clamp(12px, 3vw, 20px); font-weight: 900; min-height: 24px; padding: 0 clamp(12px, 3vw, 24px) clamp(8px, 2vw, 14px); }
+.quiz-feedback.correct { color: #4ade80; }
+.quiz-feedback.wrong { color: #f87171; }
+.quiz-box .btn.orange { margin: 8px auto 16px; display: flex; }
+</style>
+</head>
+<body>
+
+<!-- ===== صفحه ورود (کد ملی) ===== -->
+<div id="loginScreen">
+    <div class="login-box">
+        <div class="login-icon">🏰</div>
+        <h2>قلمرو اعداد</h2>
+        <div class="login-subtitle">برای ورود، کد ملی خود را وارد کنید</div>
+
+        <div class="login-input-wrap">
+            <input type="tel" class="login-input" id="nationalIdInput" placeholder="کد ملی ۱۰ رقمی" maxlength="10" inputmode="numeric" autocomplete="off">
+        </div>
+
+        <div class="login-error" id="loginError">کد ملی تعریف نشده!</div>
+
+        <button class="btn green" id="bLogin">
+            <span class="icon">🚪</span>
+            ورود
+        </button>
+
+        <div class="login-info">
+            📚 پایه هشتم — مدرسه معلم
+        </div>
+    </div>
+</div>
+
+<!-- ===== صفحه شروع ===== -->
+<div id="startScreen" class="hidden">
+    <div class="frame"></div>
+    <div class="content">
+        <h1>🏰 قلمرو اعداد 🏰</h1>
+        <div class="subtitle">اینجا قلمرو خودتو بساز و بقیه رو با دانشت به زانو در بیار</div>
+        <div class="welcome-user" id="welcomeUser">👋 امیرحسین کلانتری</div>
+        <div class="school-tag">📚 پایه هشتم — مدرسه معلم</div>
+        <div class="menu-buttons">
+            <button class="btn green" id="bStart"><span class="icon">🏰</span> ساخت قلمرو</button>
+            <button class="btn blue" id="bSettings"><span class="icon">⚙️</span> تنظیمات</button>
+            <button class="btn orange" id="bTutorial"><span class="icon">📖</span> آموزش</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== صفحه بازی ===== -->
+<div id="gameScreen">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- HUD بالا -->
+    <div id="topHUD">
+        <div class="hud-left">
+            <div class="resource coins" id="resCoins"><span class="icon">🪙</span><span class="val" id="hCoins">100</span></div>
+            <div class="resource energy" id="resEnergy"><span class="icon">⚡</span><span class="val" id="hEnergy">20</span></div>
+            <div class="resource gems" id="resGems"><span class="icon">💎</span><span class="val" id="hGems">30</span></div>
+        </div>
+        <div class="hud-right">
+            <div class="resource"><span class="icon">🏰</span><span class="val" id="hLevel">قلمرو من</span></div>
+        </div>
+    </div>
+
+    <!-- مینی‌مپ -->
+    <div id="minimap"><canvas id="minimapCanvas"></canvas></div>
+
+    <!-- دکمه‌های کناری -->
+    <div id="sideCtrl">
+        <button class="side-btn" id="bZoomIn" title="بزرگ‌نمایی">➕</button>
+        <button class="side-btn" id="bZoomOut" title="کوچک‌نمایی">➖</button>
+        <button class="side-btn" id="bCenter" title="مرکز">🎯</button>
+        <button class="side-btn" id="bMenu" title="منوی اصلی">🏠</button>
+    </div>
+
+    <!-- ===== نوار پایین (ثابت) ===== -->
+    <div id="bottomBar">
+        <!-- فروشگاه (بالای نوار پایین باز می‌شه) -->
+        <div id="shopView">
+            <div class="shop-header">
+                <button class="shop-back-btn" id="bShopBack">← بازگشت</button>
+                <div class="shop-cat-tabs">
+                    <button class="cat-btn active" id="catBuildings">🏗️ ساختمون‌ها</button>
+                    <button class="cat-btn" id="catDiamond">💎 الماس</button>
+                </div>
+            </div>
+            <div class="shop-content" id="shopContent"></div>
+        </div>
+
+        <!-- تب‌های اصلی -->
+        <div id="bottomTabs">
+            <button class="tab-btn" id="tabShop"><span class="tab-icon">🛒</span><span class="tab-label">فروشگاه</span></button>
+            <button class="tab-btn" id="tabTrade"><span class="tab-icon">🔄</span><span class="tab-label">ترید</span></button>
+            <button class="tab-btn" id="tabBattle"><span class="tab-icon">⚔️</span><span class="tab-label">نبرد</span></button>
+            <button class="tab-btn" id="tabLeague"><span class="tab-icon">🏆</span><span class="tab-label">لیگ</span></button>
+        </div>
+    </div>
+
+    <!-- منوی اکشن -->
+    <div id="actionMenu">
+        <div class="menu-header" id="menuHeader">ساختمون</div>
+        <button class="menu-btn upgrade" id="menuUpgrade"><span class="m-icon">⬆️</span><span>ارتقاء</span><span class="m-price" id="menuUpgradePrice"></span></button>
+        <button class="menu-btn army" id="menuArmy" style="display:none;"><span class="m-icon">🛡️</span><span>مدیریت ارتش</span></button>
+        <button class="menu-btn quiz" id="menuQuiz"><span class="m-icon">💰</span><span>حل سوال</span></button>
+        <button class="menu-btn sell" id="menuSell"><span class="m-icon">🗑️</span><span>فروش</span></button>
+        <button class="menu-btn close-menu" id="menuClose"><span class="m-icon">❌</span><span>بستن</span></button>
+    </div>
+
+    <div id="hint"></div>
+</div>
+
+<!-- ===== آموزش پادگان توان ===== -->
+<div id="barracksTutorial" class="modal-overlay hidden">
+    <div class="tutorial-box">
+        <div class="tutorial-icon">⚡</div>
+        <h2>پادگان توان</h2>
+        <p class="tutorial-text">آفرین! تو یه پادگان توان ساختی.<br><br>اینجا می‌تونی با <b>حل سوالات توان</b>، سکه بگیری!<br><br>هر جواب درست = <b style="color:#ffd93d;">۱۰ سکه</b> 🪙</p>
+        <button class="btn green" id="bTutorialOk"><span class="icon">✅</span> متوجه شدم</button>
+    </div>
+</div>
+
+<!-- ===== آموزش معبد جذر ===== -->
+<div id="templeTutorial" class="modal-overlay hidden">
+    <div class="tutorial-box">
+        <div class="tutorial-icon">√</div>
+        <h2>معبد جذر</h2>
+        <p class="tutorial-text">آفرین! تو یه معبد جذر ساختی.<br><br>اینجا می‌تونی با <b>حل سوالات جذر</b>، سکه بگیری!<br><br>هر جواب درست = <b style="color:#ffd93d;">۱۰ سکه</b> 🪙</p>
+        <button class="btn green" id="bTempleTutorialOk"><span class="icon">✅</span> متوجه شدم</button>
+    </div>
+</div>
+
+<!-- ===== آموزش پادگان نظامی ===== -->
+<div id="armyBarracksTutorial" class="modal-overlay hidden">
+    <div class="tutorial-box">
+        <div class="tutorial-icon">🛡️</div>
+        <h2>پادگان نظامی</h2>
+        <p class="tutorial-text">آفرین! تو یه پادگان نظامی ساختی.<br><br>اینجا می‌تونی <b>سرباز جمع کنی</b>!<br><br>ظرفیت هر پادگان: <b style="color:#93c5fd;">۲۵ سرباز</b> 🛡️</p>
+        <button class="btn green" id="bArmyBarracksTutorialOk"><span class="icon">✅</span> متوجه شدم</button>
+    </div>
+</div>
+
+<!-- ===== ترید ===== -->
+<div id="tradeModal" class="modal-overlay hidden">
+    <div class="trade-box">
+        <h2>🔄 ترید انرژی</h2>
+        <p class="trade-subtitle">انرژی‌ت رو تبدیل به سکه کن!</p>
+        <div class="trade-balance">
+            <div>⚡ انرژی: <span id="tradeEnergy">20</span></div>
+            <div>🪙 سکه: <span id="tradeCoins">100</span></div>
+        </div>
+        <div class="trade-options" id="tradeOptions"></div>
+        <button class="btn blue" id="bTradeClose"><span class="icon">🔙</span> بستن</button>
+    </div>
+</div>
+
+<!-- ===== نبرد ===== -->
+<div id="battleModal" class="modal-overlay hidden">
+    <div class="coming-soon-box">
+        <div class="coming-soon-icon">⚔️</div>
+        <h2>نبرد</h2>
+        <p>این بخش به زودی اضافه می‌شه!</p>
+        <button class="btn orange" id="bBattleClose"><span class="icon">✅</span> متوجه شدم</button>
+    </div>
+</div>
+
+<!-- ===== لیگ ===== -->
+<div id="leagueModal" class="modal-overlay hidden">
+    <div class="coming-soon-box">
+        <div class="coming-soon-icon">🏆</div>
+        <h2>لیگ</h2>
+        <p>این بخش به زودی اضافه می‌شه!</p>
+        <button class="btn orange" id="bLeagueClose"><span class="icon">✅</span> متوجه شدم</button>
+    </div>
+</div>
+
+<!-- ===== مدیریت ارتش سه‌بعدی ===== -->
+<div id="armyModal" class="modal-overlay hidden">
+    <div class="army-3d-scene" id="armyScene"></div>
+
+    <div class="army-hud">
+        <h2 class="army-title-3d">
+            <span class="title-icon">🛡️</span>
+            مدیریت ارتش
+        </h2>
+        <div class="army-stats-3d">
+            <div class="army-stat-box-3d capacity">
+                <span class="stat-label">ظرفیت:</span>
+                <span class="stat-value"><span id="armyUsed">0</span>/<span id="armyCap">0</span></span>
+            </div>
+            <div class="army-stat-box-3d coins">
+                <span class="stat-label">سکه:</span>
+                <span class="stat-value" id="armyCoins">100</span>
+            </div>
+            <div class="army-stat-box-3d power">
+                <span class="stat-label">قدرت:</span>
+                <span class="stat-value" id="armyPower">0</span>
+            </div>
+        </div>
+        <button class="army-close-btn-3d" id="bArmyClose">
+            <span>✖</span> بستن
+        </button>
+    </div>
+
+    <div class="army-bottom-panel" id="armyBottomPanel"></div>
+</div>
+
+<!-- ===== کوییز ===== -->
+<div id="powerQuiz" class="modal-overlay hidden">
+    <div class="quiz-box">
+        <div class="quiz-header">
+            <div class="quiz-title" id="quizTitle">⚡ حل سوال توان — سطح ۱</div>
+            <div class="quiz-stats">
+                <span class="quiz-stat">🪙 <span id="quizCoins">0</span></span>
+                <span class="quiz-stat">✅ <span id="quizCorrect">0</span></span>
+                <span class="quiz-stat">❌ <span id="quizWrong">0</span></span>
+            </div>
+        </div>
+        <div class="quiz-question" id="quizQuestion">...</div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <button class="btn orange" id="bQuizBack"><span class="icon">🔙</span> بازگشت</button>
+    </div>
+</div>
+
+<!-- Three.js از CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// =====================================================
+//  🎮 قلمرو اعداد — JavaScript کامل
+// =====================================================
+
+// ============== تنظیمات ذخیره‌سازی ==============
+var STORAGE_KEY = 'ghalamro_argham_save_v1';
+var NATIONAL_ID = '0153524774';
+var USER_NAME = 'امیرحسین کلانتری';
+var AUTOSAVE_INTERVAL = 3000;
+var autosaveTimer = null;
+
+var TILE_W = 48;
+var TILE_H = 24;
+var GRID_SIZE = 100;
+var INCOME_INTERVAL = 5000;
+
+// ============== State ==============
+var state = {
+    coins: 100, energy: 20, gems: 30,
+    selectedItem: null, buildings: [],
+    camera: { x: 0, y: 0, zoom: 1 },
+    hoverTile: null, particles: [],
+    selectedBuilding: null, time: 0,
+    isDragging: false, draggingBuilding: null,
+    dragOffsetX: 0, dragOffsetY: 0, dragMoved: false,
+    guideStep: 0,
+    tutorialShown: false,
+    templeTutorialShown: false, armyTutorialShown: false,
+    welcomeShown: false,
+    sortedBuildings: [], sortedBuildingsCount: -1,
+    lastIncomeTime: 0, realmName: 'قلمرو من',
+    army: {}, shopOpen: false, shopCategory: 'buildings',
+    nationalId: null, userName: null,
+};
+
+// ============== ذخیره‌سازی ==============
+function getSaveData() {
+    return {
+        coins: state.coins,
+        energy: state.energy,
+        gems: state.gems,
+        buildings: state.buildings,
+        army: state.army,
+        realmName: state.realmName,
+        guideStep: state.guideStep,
+        tutorialShown: state.tutorialShown,
+        templeTutorialShown: state.templeTutorialShown,
+        armyTutorialShown: state.armyTutorialShown,
+        welcomeShown: state.welcomeShown,
+        nationalId: state.nationalId,
+        userName: state.userName,
+        camera: state.camera,
+        savedAt: Date.now(),
+    };
+}
+
+function saveGame() {
+    try {
+        if (!state.nationalId) return;
+        var data = getSaveData();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+        console.warn('save error:', e);
+    }
+}
+
+function loadGame() {
+    try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+        var data = JSON.parse(raw);
+        if (!data || !data.nationalId) return false;
+
+        state.coins = data.coins !== undefined ? data.coins : 100;
+        state.energy = data.energy !== undefined ? data.energy : 20;
+        state.gems = data.gems !== undefined ? data.gems : 30;
+        state.buildings = data.buildings || [];
+        state.army = data.army || {};
+        state.realmName = data.realmName || ('قلمرو ' + (data.userName || USER_NAME));
+        state.guideStep = data.guideStep !== undefined ? data.guideStep : 0;
+        state.tutorialShown = !!data.tutorialShown;
+        state.templeTutorialShown = !!data.templeTutorialShown;
+        state.armyTutorialShown = !!data.armyTutorialShown;
+        state.welcomeShown = !!data.welcomeShown;
+        state.nationalId = data.nationalId;
+        state.userName = data.userName || USER_NAME;
+        if (data.camera) state.camera = data.camera;
+        return true;
+    } catch (e) {
+        console.warn('load error:', e);
+        return false;
+    }
+}
+
+function startAutosave() {
+    if (autosaveTimer) clearInterval(autosaveTimer);
+    autosaveTimer = setInterval(saveGame, AUTOSAVE_INTERVAL);
+}
+
+// ============== انواع ساختمون ==============
+var BUILDING_TYPES = {
+    townhall:     { name: 'تالار اصلی', emoji: '🏛️', cost: 0, size: 2, roof: '#ffd93d', power: 50, income: 'none' },
+    barracks:     { name: 'پادگان توان', emoji: '⚡', cost: 100, size: 2, roof: '#22c55e', power: 30, income: 'coins' },
+    mine:         { name: 'معدن انرژی', emoji: '💎', cost: 80, size: 1, roof: '#a855f7', power: 20, income: 'energy' },
+    temple:       { name: 'معبد جذر', emoji: '√',  cost: 150, size: 2, roof: '#3b82f6', power: 40, income: 'coins' },
+    armybarracks: { name: 'پادگان نظامی', emoji: '🛡️', cost: 200, size: 2, roof: '#ef4444', power: 60, income: 'none' },
+    wall:         { name: 'دیوار توانی', emoji: '🧱', cost: 30, size: 1, roof: '#8b5a2b', power: 10, income: 'none' },
+};
+
+var ARMY_UNITS = {
+    knight:     { id: 'knight', name: 'شوالیه توان', icon: '⚔️', cost: 50, hp: 120, atk: 30, spd: 5, power: 30, role: 'تانک / ضربه‌زن سنگین', ability: '🛡️ سپر توان — ۲۰٪ آسیب کمتر' },
+    archer:     { id: 'archer', name: 'تیرانداز جذر', icon: '🏹', cost: 40, hp: 60, atk: 35, spd: 8, power: 35, role: 'حمله از دور', ability: '🎯 شلیک جذری — از راه دور' },
+    ogre:       { id: 'ogre', name: 'غول ضرب', icon: '👹', cost: 70, hp: 200, atk: 40, spd: 3, power: 50, role: 'تانک اصلی، جون بالا', ability: '💥 ضربه‌ی مضاعف — ۲ برابر آسیب' },
+    pythagoras: { id: 'pythagoras', name: 'افسانه فیثاغورث', icon: '📐', cost: 120, hp: 100, atk: 50, spd: 6, power: 80, role: 'افسانه‌ای، قدرت ویژه', ability: '✨ قضیه‌ی طلایی — قدرت تیمی' },
+};
+
+var ARMY_CAPACITY_PER_BARRACKS = 25;
+
+var TRADE_RATES = [
+    { energy: 10, coins: 70 },
+    { energy: 25, coins: 180 },
+    { energy: 50, coins: 380 },
+    { energy: 100, coins: 800 },
+];
+
+function defUpgradeBaseCost(type) {
+    switch (type) {
+        case 'townhall': return 100;
+        case 'barracks': return 100;
+        case 'mine': return 80;
+        case 'temple': return 150;
+        case 'armybarracks': return 200;
+        case 'wall': return 30;
+        default: return 100;
+    }
+}
+
+function getUpgradeCost(b) { return defUpgradeBaseCost(b.type) * Math.pow(2, b.level - 1); }
+function getMaxCountForType(type) {
+    if (type === 'townhall') return 1;
+    var th = state.buildings.find(function(x) { return x.type === 'townhall'; });
+    return 4 + (th ? th.level : 1);
+}
+function getCountOfType(type) {
+    var c = 0;
+    for (var i = 0; i < state.buildings.length; i++) if (state.buildings[i].type === type) c++;
+    return c;
+}
+function getTotalArmyCapacity() { return getCountOfType('armybarracks') * ARMY_CAPACITY_PER_BARRACKS; }
+function getTotalArmyCount() {
+    var t = 0;
+    for (var k in state.army) if (state.army.hasOwnProperty(k)) t += state.army[k];
+    return t;
+}
+function getTotalArmyPower() {
+    var t = 0;
+    for (var k in state.army) if (state.army.hasOwnProperty(k) && ARMY_UNITS[k]) t += state.army[k] * ARMY_UNITS[k].power;
+    return t;
+}
+
+var canvas = document.getElementById('gameCanvas');
+var ctx = canvas.getContext('2d', { alpha: false });
+
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+window.addEventListener('orientationchange', function() { setTimeout(resizeCanvas, 200); });
+
+function gridToScreen(gx, gy) { return { x: (gx - gy) * (TILE_W / 2), y: (gx + gy) * (TILE_H / 2) }; }
+function screenToGrid(sx, sy) {
+    return { x: Math.round((sx / (TILE_W / 2) + sy / (TILE_H / 2)) / 2), y: Math.round((sy / (TILE_H / 2) - sx / (TILE_W / 2)) / 2) };
+}
+function centerCamera() {
+    var c = gridToScreen(GRID_SIZE / 2, GRID_SIZE / 2);
+    state.camera.x = canvas.width / 2 - c.x;
+    state.camera.y = canvas.height / 2 - c.y - 40;
+}
+
+function getGridFromEvent(clientX, clientY) {
+    var rect = canvas.getBoundingClientRect();
+    var offsetX = (clientX - rect.left - rect.width / 2) / state.camera.zoom + canvas.width / 2;
+    var offsetY = (clientY - rect.top - rect.height / 2) / state.camera.zoom + canvas.height / 2;
+    return screenToGrid(offsetX - state.camera.x, offsetY - state.camera.y);
+}
+
+function noise2D(x, y, seed) { var n = Math.sin(x * 12.9898 + y * 78.233 + seed * 43.123) * 43758.5453; return n - Math.floor(n); }
+function smoothNoise(x, y, scale, seed) {
+    var sx = x / scale, sy = y / scale;
+    var x0 = Math.floor(sx), y0 = Math.floor(sy);
+    var fx = sx - x0, fy = sy - y0;
+    var u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
+    return (noise2D(x0, y0, seed) * (1 - u) + noise2D(x0 + 1, y0, seed) * u) * (1 - v) + (noise2D(x0, y0 + 1, seed) * (1 - u) + noise2D(x0 + 1, y0 + 1, seed) * u) * v;
+}
+
+var tiles = [], tileMap = {};
+for (var yy0 = 0; yy0 < GRID_SIZE; yy0++) {
+    for (var xx0 = 0; xx0 < GRID_SIZE; xx0++) {
+        var cxg = GRID_SIZE / 2, cyg = GRID_SIZE / 2;
+        var dist = Math.sqrt((xx0 - cxg) ** 2 + (yy0 - cyg) ** 2);
+        var maxDist = Math.sqrt(cxg ** 2 + cyg ** 2);
+        var distRatio = dist / maxDist;
+        var n1 = smoothNoise(xx0, yy0, 12, 1), n2 = smoothNoise(xx0, yy0, 6, 2), n3 = smoothNoise(xx0, yy0, 3, 3);
+        var combined = n1 * 0.5 + n2 * 0.3 + n3 * 0.2;
+        var type = 'grass';
+        if (distRatio > 0.85) { if (distRatio > 0.95 || combined < 0.4) type = 'water'; else type = 'sand'; }
+        else if (combined < 0.25 && distRatio > 0.4) type = 'water';
+        else if (combined < 0.35 && distRatio > 0.7) type = 'sand';
+        else if (combined > 0.4 && combined < 0.5) type = 'grass-dark';
+        var tile = { x: xx0, y: yy0, type: type };
+        tiles.push(tile);
+        tileMap[xx0 + ',' + yy0] = tile;
+    }
+}
+
+function getTileColors(type) {
+    if (type === 'grass') return { top: '#7cba5e', side: '#5a8a3f', dark: '#4a7030' };
+    if (type === 'grass-dark') return { top: '#6aaa4e', side: '#4e7a35', dark: '#3e6228' };
+    if (type === 'water') return { top: '#4aa8d8', side: '#2e7eb0', dark: '#1e5e90' };
+    if (type === 'sand') return { top: '#e8d8a8', side: '#c8b888', dark: '#a89868' };
+    return { top: '#7cba5e', side: '#5a8a3f', dark: '#4a7030' };
+}
+
+function drawTile(x, y, colors) {
+    var top = gridToScreen(x, y);
+    var cx = top.x + state.camera.x, cy = top.y + state.camera.y;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx - TILE_W / 2, cy + TILE_H / 2); ctx.lineTo(cx - TILE_W / 2, cy + TILE_H / 2 + 10); ctx.lineTo(cx, cy + 10); ctx.closePath();
+    ctx.fillStyle = colors.side; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + TILE_W / 2, cy + TILE_H / 2); ctx.lineTo(cx + TILE_W / 2, cy + TILE_H / 2 + 10); ctx.lineTo(cx, cy + 10); ctx.closePath();
+    ctx.fillStyle = colors.dark; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + TILE_W / 2, cy + TILE_H / 2); ctx.lineTo(cx, cy + TILE_H); ctx.lineTo(cx - TILE_W / 2, cy + TILE_H / 2); ctx.closePath();
+    ctx.fillStyle = colors.top; ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)'; ctx.lineWidth = 1; ctx.stroke();
+}
+
+function drawBuildingLabel(cx, topY, def, lvl) {
+    var label = def.emoji + ' ' + def.name;
+    var lvlText = 'سطح ' + lvl;
+    ctx.font = 'bold 12px Vazirmatn';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    var boxW = Math.max(ctx.measureText(label).width, ctx.measureText(lvlText).width) + 20;
+    var boxH = 36;
+    var boxX = cx - boxW / 2, boxY = topY - boxH;
+    ctx.fillStyle = 'rgba(20, 10, 5, 0.9)'; ctx.strokeStyle = '#ffd93d'; ctx.lineWidth = 2;
+    var r = 8;
+    ctx.beginPath();
+    ctx.moveTo(boxX + r, boxY); ctx.lineTo(boxX + boxW - r, boxY);
+    ctx.quadraticCurveTo(boxX + boxW, boxY, boxX + boxW, boxY + r);
+    ctx.lineTo(boxX + boxW, boxY + boxH - r); ctx.quadraticCurveTo(boxX + boxW, boxY + boxH, boxX + boxW - r, boxY + boxH);
+    ctx.lineTo(boxX + r, boxY + boxH); ctx.quadraticCurveTo(boxX, boxY + boxH, boxX, boxY + boxH - r);
+    ctx.lineTo(boxX, boxY + r); ctx.quadraticCurveTo(boxX, boxY, boxX + r, boxY);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.font = 'bold 12px Vazirmatn'; ctx.fillStyle = '#fff';
+    ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
+    ctx.fillText(label, cx, boxY + 12);
+    ctx.font = 'bold 11px Vazirmatn'; ctx.fillStyle = '#ffd93d';
+    ctx.fillText(lvlText, cx, boxY + 26);
+    ctx.shadowBlur = 0; ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+}
+
+function drawTower(cx, cy, tw, th, wallL, wallR, roofColor, roofStroke) {
+    ctx.fillStyle = wallL;
+    ctx.fillRect(cx - tw / 2, cy - th / 2, tw, th);
+    ctx.fillStyle = wallR;
+    ctx.fillRect(cx + tw / 2 - 4, cy - th / 2, 4, th);
+    ctx.fillStyle = '#3a1f0a';
+    ctx.fillRect(cx - 2, cy - th / 2 + 5, 4, 6);
+    ctx.fillStyle = '#ffcc00';
+    ctx.fillRect(cx - 1.5, cy - th / 2 + 6, 3, 4);
+    ctx.fillStyle = roofColor;
+    ctx.beginPath();
+    ctx.moveTo(cx - tw / 2 - 2, cy - th / 2);
+    ctx.lineTo(cx, cy - th / 2 - 12);
+    ctx.lineTo(cx + tw / 2 + 2, cy - th / 2);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = roofStroke; ctx.lineWidth = 1.5; ctx.stroke();
+}
+
+function drawTownHall(cx, cy, bw, bh, b) {
+    var lvl = b.level || 1;
+    ctx.beginPath(); ctx.ellipse(cx, cy + 10, bw * 0.75, bw * 0.3, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fill();
+    var wallL = '#6a5a4a', wallR = '#4a3a2a', roofColor = '#ffd93d', roofStroke = '#8b4500';
+    if (lvl === 2) { wallL = '#7a6a5a'; wallR = '#5a4a3a'; roofColor = '#ffc93d'; }
+    else if (lvl === 3) { wallL = '#8a7a6a'; wallR = '#6a5a4a'; roofColor = '#ffb347'; roofStroke = '#7a3500'; }
+    else if (lvl === 4) { wallL = '#9a8a7a'; wallR = '#7a6a5a'; roofColor = '#ff8c42'; roofStroke = '#5a1a00'; }
+    else if (lvl >= 5) { wallL = '#c8b898'; wallR = '#a89878'; roofColor = '#ffd93d'; }
+    var bodyH = bh - 25 + (lvl - 1) * 3;
+    ctx.fillStyle = wallL;
+    ctx.beginPath();
+    ctx.moveTo(cx - bw / 2 + 4, cy - 8); ctx.lineTo(cx - bw / 2 + 4, cy - 8 - bodyH); ctx.lineTo(cx, cy - 8 - bodyH + bw / 4); ctx.lineTo(cx, cy - 8 + bw / 4);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = wallR;
+    ctx.beginPath();
+    ctx.moveTo(cx + bw / 2 - 4, cy - 8); ctx.lineTo(cx + bw / 2 - 4, cy - 8 - bodyH); ctx.lineTo(cx, cy - 8 - bodyH + bw / 4); ctx.lineTo(cx, cy - 8 + bw / 4);
+    ctx.closePath(); ctx.fill();
+    var doorW = 14, doorH = 22;
+    ctx.fillStyle = '#3a1f0a';
+    ctx.fillRect(cx - doorW / 2 + 2, cy - 8 - doorH + bw / 4, doorW, doorH);
+    var roofY = cy - 8 - bodyH + bw / 4;
+    ctx.fillStyle = roofColor;
+    ctx.beginPath();
+    ctx.moveTo(cx, roofY - bw / 4 - 10 - (lvl - 1) * 2); ctx.lineTo(cx - bw / 2 - 4, roofY - 8); ctx.lineTo(cx, roofY); ctx.lineTo(cx + bw / 2 + 4, roofY - 8);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = roofStroke; ctx.lineWidth = 2.5; ctx.stroke();
+    var towerW = 12 + (lvl - 1) * 2;
+    var towerH = 20 + (lvl - 1) * 4;
+    drawTower(cx - bw / 2 - 2, roofY - towerH / 2 - 8, towerW, towerH, wallL, wallR, roofColor, roofStroke);
+    drawTower(cx + bw / 2 - towerW + 2, roofY - towerH / 2 - 8, towerW, towerH, wallL, wallR, roofColor, roofStroke);
+    if (lvl >= 2) {
+        var domeR = 8 + (lvl - 2) * 2;
+        var domeY = roofY - bw / 4 - 15 - (lvl - 1) * 2;
+        ctx.fillStyle = roofColor;
+        ctx.beginPath(); ctx.arc(cx, domeY, domeR, Math.PI, 0); ctx.fill();
+    }
+    var topY = roofY - bw / 4 - 10 - (lvl - 1) * 2 - 25;
+    if (lvl >= 3) topY -= 30;
+    drawBuildingLabel(cx, topY, BUILDING_TYPES.townhall, lvl);
+}
+
+function drawBarracks(cx, cy, bw, bh, b) {
+    var lvl = b.level || 1;
+    var wallL = '#6a5a4a', wallR = '#4a3a2a', roofColor = '#22c55e', roofDark = '#166534';
+    if (lvl >= 2) { wallL = '#7a6a5a'; wallR = '#5a4a3a'; roofColor = '#2ecc71'; }
+    if (lvl >= 3) { wallL = '#8a7a6a'; roofColor = '#1abc9c'; }
+    if (lvl >= 4) { wallL = '#9a8a7a'; roofColor = '#3b82f6'; }
+    if (lvl >= 5) { wallL = '#b8a888'; roofColor = '#ffd93d'; }
+    ctx.beginPath(); ctx.ellipse(cx, cy + 8, bw * 0.7, bw * 0.28, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fill();
+    var bodyH = bh - 18 + (lvl - 1) * 4;
+    ctx.fillStyle = wallL;
+    ctx.beginPath();
+    ctx.moveTo(cx - bw / 2 + 4, cy); ctx.lineTo(cx - bw / 2 + 4, cy - bodyH); ctx.lineTo(cx, cy - bodyH + bw / 4); ctx.lineTo(cx, cy + bw / 4);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = wallR;
+    ctx.beginPath();
+    ctx.moveTo(cx + bw / 2 - 4, cy); ctx.lineTo(cx + bw / 2 - 4, cy - bodyH); ctx.lineTo(cx, cy - bodyH + bw / 4); ctx.lineTo(cx, cy + bw / 4);
+    ctx.closePath(); ctx.fill();
+    var roofY = cy - bodyH + bw / 4;
+    var roofH = bw / 4 + 10 + (lvl - 1) * 2;
+    ctx.fillStyle = roofColor;
+    ctx.beginPath();
+    ctx.moveTo(cx, roofY - roofH - 6); ctx.lineTo(cx - bw / 2 - 4, roofY - 4); ctx.lineTo(cx, roofY); ctx.lineTo(cx + bw / 2 + 4, roofY - 4);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = roofDark; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.strokeStyle = '#d0d0d0'; ctx.lineWidth = 3;
+    var sw = 12 + (lvl - 1) * 2;
+    var swordTopY = roofY - roofH - 20;
+    ctx.beginPath(); ctx.moveTo(cx - sw, swordTopY); ctx.lineTo(cx + sw, swordTopY + 14); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx + sw, swordTopY); ctx.lineTo(cx - sw, swordTopY + 14); ctx.stroke();
+    var topY2 = roofY - roofH - 30;
+    drawBuildingLabel(cx, topY2, BUILDING_TYPES.barracks, lvl);
+}
+
+function drawArmyBarracks(cx, cy, bw, bh, b) {
+    var lvl = b.level || 1;
+    var wallL = '#5a5a4a', wallR = '#3a3a2a', roofColor = '#ef4444', roofDark = '#991b1b';
+    if (lvl >= 2) { wallL = '#6a6a5a'; roofColor = '#f43f5e'; }
+    if (lvl >= 3) { wallL = '#7a7a6a'; roofColor = '#dc2626'; }
+    if (lvl >= 4) { wallL = '#8a8a7a'; roofColor = '#b91c1c'; }
+    if (lvl >= 5) { wallL = '#a8a888'; roofColor = '#ffd93d'; roofDark = '#d4a017'; }
+    ctx.beginPath(); ctx.ellipse(cx, cy + 8, bw * 0.7, bw * 0.28, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fill();
+    var bodyH = bh - 18 + (lvl - 1) * 4;
+    ctx.fillStyle = wallL;
+    ctx.beginPath();
+    ctx.moveTo(cx - bw / 2 + 4, cy); ctx.lineTo(cx - bw / 2 + 4, cy - bodyH); ctx.lineTo(cx, cy - bodyH + bw / 4); ctx.lineTo(cx, cy + bw / 4);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = wallR;
+    ctx.beginPath();
+    ctx.moveTo(cx + bw / 2 - 4, cy); ctx.lineTo(cx + bw / 2 - 4, cy - bodyH); ctx.lineTo(cx, cy - bodyH + bw / 4); ctx.lineTo(cx, cy + bw / 4);
+    ctx.closePath(); ctx.fill();
+    var roofY = cy - bodyH + bw / 4;
+    var roofH = bw / 4 + 10 + (lvl - 1) * 2;
+    ctx.fillStyle = roofColor;
+    ctx.beginPath();
+    ctx.moveTo(cx, roofY - roofH - 6); ctx.lineTo(cx - bw / 2 - 4, roofY - 4); ctx.lineTo(cx, roofY); ctx.lineTo(cx + bw / 2 + 4, roofY - 4);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = roofDark; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.strokeStyle = '#3a2a1a'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(cx, roofY - roofH - 6); ctx.lineTo(cx, roofY - roofH - 32); ctx.stroke();
+    var flagTopY2 = roofY - roofH - 32;
+    ctx.fillStyle = '#dc2626';
+    ctx.beginPath();
+    ctx.moveTo(cx, flagTopY2); ctx.lineTo(cx + 22, flagTopY2 + 8); ctx.lineTo(cx, flagTopY2 + 16);
+    ctx.closePath(); ctx.fill();
+    var topY3 = flagTopY2 - 20;
+    drawBuildingLabel(cx, topY3, BUILDING_TYPES.armybarracks, lvl);
+}
+
+function drawMine(cx, cy, bw, bh, b) {
+    var lvl = b.level || 1;
+    var wallL = '#5a4070', wallR = '#3a2a50', roofColor = '#a855f7', roofDark = '#6b21a8';
+    var crystalColor = '#e0a0ff';
+    if (lvl >= 2) { wallL = '#6a5090'; roofColor = '#b366f7'; crystalColor = '#e8b0ff'; }
+    if (lvl >= 3) { wallL = '#7a60b0'; roofColor = '#c878ff'; crystalColor = '#f0c0ff'; }
+    if (lvl >= 4) { wallL = '#8a70d0'; roofColor = '#d890ff'; crystalColor = '#f8d0ff'; }
+    if (lvl >= 5) { wallL = '#a890d0'; roofColor = '#ffd93d'; roofDark = '#d4a017'; crystalColor = '#fff8a0'; }
+    ctx.beginPath(); ctx.ellipse(cx, cy + 6, bw * 0.65, bw * 0.27, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fill();
+    var bodyH = bh + (lvl - 1) * 4;
+    ctx.fillStyle = wallL;
+    ctx.beginPath();
+    ctx.moveTo(cx - bw / 2 + 4, cy); ctx.lineTo(cx - bw / 2 + 4, cy - bodyH); ctx.lineTo(cx, cy - bodyH + bw / 4); ctx.lineTo(cx, cy + bw / 4);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = wallR;
+    ctx.beginPath();
+    ctx.moveTo(cx + bw / 2 - 4, cy); ctx.lineTo(cx + bw / 2 - 4, cy - bodyH); ctx.lineTo(cx, cy - bodyH + bw / 4); ctx.lineTo(cx, cy + bw / 4);
+    ctx.closePath(); ctx.fill();
+    var roofY = cy - bodyH + bw / 4;
+    ctx.fillStyle = roofColor;
+    ctx.beginPath();
+    ctx.moveTo(cx, roofY - bw / 4 - 6); ctx.lineTo(cx - bw / 2 - 4, roofY - 4); ctx.lineTo(cx, roofY); ctx.lineTo(cx + bw / 2 + 4, roofY - 4);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = roofDark; ctx.lineWidth = 2.5; ctx.stroke();
+    var topY3 = roofY - bw / 4 - 16;
+    drawBuildingLabel(cx, topY3, BUILDING_TYPES.mine, lvl);
+}
+
+function drawTemple(cx, cy, bw, bh, b) {
+    var lvl = b.level || 1;
+    var wallL = '#3a4a6a', wallR = '#25304a', domeColor = '#3b82f6', domeDark = '#1e3a8a', glowColor = '#a0d0ff';
+    if (lvl >= 2) { wallL = '#4a5a7a'; wallR = '#35405a'; domeColor = '#4b92f6'; }
+    if (lvl >= 3) { wallL = '#5a6a8a'; domeColor = '#5ba2f6'; }
+    if (lvl >= 4) { wallL = '#6a7a9a'; domeColor = '#6bb2f6'; }
+    if (lvl >= 5) { wallL = '#8a7a5a'; domeColor = '#ffd93d'; domeDark = '#d4a017'; glowColor = '#fff8a0'; }
+    ctx.beginPath(); ctx.ellipse(cx, cy + 8, bw * 0.7, bw * 0.28, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fill();
+    var bodyH = bh - 12 + (lvl - 1) * 4;
+    ctx.fillStyle = wallL;
+    ctx.beginPath();
+    ctx.moveTo(cx - bw / 2 + 4, cy); ctx.lineTo(cx - bw / 2 + 4, cy - bodyH); ctx.lineTo(cx, cy - bodyH + bw / 4); ctx.lineTo(cx, cy + bw / 4);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = wallR;
+    ctx.beginPath();
+    ctx.moveTo(cx + bw / 2 - 4, cy); ctx.lineTo(cx + bw / 2 - 4, cy - bodyH); ctx.lineTo(cx, cy - bodyH + bw / 4); ctx.lineTo(cx, cy + bw / 4);
+    ctx.closePath(); ctx.fill();
+    var roofY = cy - bodyH + bw / 4;
+    ctx.fillStyle = wallL;
+    ctx.fillRect(cx - bw / 2 - 2, roofY - 6, bw + 4, 8);
+    var domeR = bw / 3;
+    var domeH = bw / 4 + (lvl - 1) * 2;
+    ctx.fillStyle = domeColor;
+    ctx.beginPath(); ctx.ellipse(cx, roofY - 6, domeR, domeH, 0, Math.PI, 0); ctx.fill();
+    ctx.strokeStyle = domeDark; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(cx, roofY - 6, domeR, domeH, 0, Math.PI, 0); ctx.stroke();
+    var tipY = roofY - 6 - domeH;
+    ctx.fillStyle = glowColor;
+    ctx.beginPath();
+    ctx.moveTo(cx, tipY - 10 - lvl * 2); ctx.lineTo(cx + 4, tipY); ctx.lineTo(cx, tipY + 8); ctx.lineTo(cx - 4, tipY);
+    ctx.closePath(); ctx.fill();
+    var topY4 = tipY - 10 - lvl * 2 - 5;
+    drawBuildingLabel(cx, topY4, BUILDING_TYPES.temple, lvl);
+}
+
+function drawWall(b) {
+    var lvl = b.level || 1;
+    var top = gridToScreen(b.x, b.y);
+    var cx = top.x + state.camera.x + TILE_W / 4;
+    var cy = top.y + state.camera.y + TILE_H / 4;
+    var h = 24, w = TILE_W / 2 - 1;
+    var topColor = '#9a8a6a', leftColor = '#7a5a3a', rightColor = '#4a2a10';
+    if (lvl >= 2) { topColor = '#aaa080'; leftColor = '#8a6a4a'; rightColor = '#5a3a20'; }
+    if (lvl >= 3) { topColor = '#baa890'; leftColor = '#9a7a5a'; rightColor = '#6a4a30'; }
+    if (lvl >= 4) { topColor = '#cab8a0'; leftColor = '#aa8a6a'; rightColor = '#7a5a40'; }
+    if (lvl >= 5) { topColor = '#e8c878'; leftColor = '#c8a858'; rightColor = '#9a7a38'; }
+    ctx.beginPath(); ctx.ellipse(cx, cy + 4, w, TILE_H / 2 - 5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(cx - w, cy - h); ctx.lineTo(cx, cy - h + TILE_H / 2); ctx.lineTo(cx, cy + TILE_H / 2); ctx.lineTo(cx - w, cy);
+    ctx.closePath(); ctx.fillStyle = leftColor; ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(cx + w, cy - h); ctx.lineTo(cx, cy - h + TILE_H / 2); ctx.lineTo(cx, cy + TILE_H / 2); ctx.lineTo(cx + w, cy);
+    ctx.closePath(); ctx.fillStyle = rightColor; ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - h + TILE_H / 2); ctx.lineTo(cx + w, cy - h); ctx.lineTo(cx, cy - h - TILE_H / 2); ctx.lineTo(cx - w, cy - h);
+    ctx.closePath(); ctx.fillStyle = topColor; ctx.fill();
+}
+
+function drawBuilding(b) {
+    var def = BUILDING_TYPES[b.type];
+    var size = def.size, lvl = b.level || 1;
+    var top = gridToScreen(b.x, b.y);
+    var cx = top.x + state.camera.x + (size * TILE_W / 4);
+    var cy = top.y + state.camera.y + (size * TILE_H / 4);
+    var bw = size * 36 * (1 + (lvl - 1) * 0.08);
+    var bh = 35 + (lvl - 1) * 5;
+    if (b.type === 'townhall') bh = 70 + (lvl - 1) * 6;
+    else if (b.type === 'temple') bh = 60 + (lvl - 1) * 5;
+    else if (b.type === 'barracks' || b.type === 'armybarracks') bh = 50 + (lvl - 1) * 5;
+    else if (b.type === 'mine') bh = 35 + (lvl - 1) * 4;
+    if (state.isDragging && state.draggingBuilding === b) ctx.globalAlpha = 0.35;
+    if (b.type === 'townhall') drawTownHall(cx, cy, bw, bh, b);
+    else if (b.type === 'barracks') drawBarracks(cx, cy, bw, bh, b);
+    else if (b.type === 'armybarracks') drawArmyBarracks(cx, cy, bw, bh, b);
+    else if (b.type === 'mine') drawMine(cx, cy, bw, bh, b);
+    else if (b.type === 'temple') drawTemple(cx, cy, bw, bh, b);
+    else if (b.type === 'wall') drawWall(b);
+    ctx.globalAlpha = 1;
+}
+
+function drawHoverTile() {
+    if (!state.hoverTile) return;
+    if (state.isDragging && state.draggingBuilding) {
+        var b = state.draggingBuilding, def2 = BUILDING_TYPES[b.type];
+        var size2 = def2.size;
+        var dragX = state.hoverTile.x - state.dragOffsetX;
+        var dragY = state.hoverTile.y - state.dragOffsetY;
+        var canPlaceDrag = canPlaceBuilding(dragX, dragY, size2, b);
+        for (var dy2 = 0; dy2 < size2; dy2++) for (var dx2 = 0; dx2 < size2; dx2++) {
+            var top2 = gridToScreen(dragX + dx2, dragY + dy2);
+            ctx.beginPath();
+            ctx.moveTo(top2.x + state.camera.x, top2.y + state.camera.y);
+            ctx.lineTo(top2.x + state.camera.x + TILE_W / 2, top2.y + state.camera.y + TILE_H / 2);
+            ctx.lineTo(top2.x + state.camera.x, top2.y + state.camera.y + TILE_H);
+            ctx.lineTo(top2.x + state.camera.x - TILE_W / 2, top2.y + state.camera.y + TILE_H / 2);
+            ctx.closePath();
+            ctx.fillStyle = canPlaceDrag ? 'rgba(74, 222, 128, 0.6)' : 'rgba(239, 68, 68, 0.6)';
+            ctx.fill();
+        }
+        return;
+    }
+    if (!state.selectedItem) return;
+    var def = BUILDING_TYPES[state.selectedItem], size = def.size;
+    var x = state.hoverTile.x, y = state.hoverTile.y;
+    var canPlace = canPlaceBuilding(x, y, size);
+    for (var dy = 0; dy < size; dy++) for (var dx = 0; dx < size; dx++) {
+        var top = gridToScreen(x + dx, y + dy);
+        ctx.beginPath();
+        ctx.moveTo(top.x + state.camera.x, top.y + state.camera.y);
+        ctx.lineTo(top.x + state.camera.x + TILE_W / 2, top.y + state.camera.y + TILE_H / 2);
+        ctx.lineTo(top.x + state.camera.x, top.y + state.camera.y + TILE_H);
+        ctx.lineTo(top.x + state.camera.x - TILE_W / 2, top.y + state.camera.y + TILE_H / 2);
+        ctx.closePath();
+        ctx.fillStyle = canPlace ? 'rgba(74, 222, 128, 0.5)' : 'rgba(239, 68, 68, 0.5)';
+        ctx.fill();
+    }
+}
+
+function canPlaceBuilding(x, y, size, ignoreBuilding) {
+    if (x < 0 || y < 0 || x + size > GRID_SIZE || y + size > GRID_SIZE) return false;
+    for (var dy = 0; dy < size; dy++) for (var dx = 0; dx < size; dx++) {
+        var tile = tileMap[(x + dx) + ',' + (y + dy)];
+        if (!tile || tile.type === 'water') return false;
+    }
+    for (var i = 0; i < state.buildings.length; i++) {
+        var b = state.buildings[i];
+        if (ignoreBuilding && b === ignoreBuilding) continue;
+        var bSize = BUILDING_TYPES[b.type].size;
+        if (x < b.x + bSize && x + size > b.x && y < b.y + bSize && y + size > b.y) return false;
+    }
+    return true;
+}
+
+function drawParticles() {
+    for (var i = state.particles.length - 1; i >= 0; i--) {
+        var p = state.particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color; ctx.globalAlpha = p.life; ctx.fill();
+        ctx.globalAlpha = 1;
+        p.x += p.vx; p.y += p.vy; p.vy += 0.2;
+        p.life -= 0.035; p.size *= 0.97;
+        if (p.life <= 0) state.particles.splice(i, 1);
+    }
+}
+
+// ============== بهینه‌سازی: cache bounds ==============
+var cachedBounds = null, lastCamX = null, lastCamY = null, lastZoom = null, lastCanvasW = null, lastCanvasH = null;
+function getVisibleBounds() {
+    if (cachedBounds && lastCamX === state.camera.x && lastCamY === state.camera.y && lastZoom === state.camera.zoom && lastCanvasW === canvas.width && lastCanvasH === canvas.height) return cachedBounds;
+    lastCamX = state.camera.x; lastCamY = state.camera.y; lastZoom = state.camera.zoom; lastCanvasW = canvas.width; lastCanvasH = canvas.height;
+    var zoom = state.camera.zoom || 1;
+    var viewW = canvas.width / zoom, viewH = canvas.height / zoom;
+    var left = canvas.width / 2 - viewW / 2, top = canvas.height / 2 - viewH / 2;
+    var right = canvas.width / 2 + viewW / 2, bottom = canvas.height / 2 + viewH / 2;
+    var tl = screenToGrid(left - state.camera.x, top - state.camera.y);
+    var tr = screenToGrid(right - state.camera.x, top - state.camera.y);
+    var bl = screenToGrid(left - state.camera.x, bottom - state.camera.y);
+    var br = screenToGrid(right - state.camera.x, bottom - state.camera.y);
+    var margin = 4;
+    cachedBounds = {
+        minX: Math.max(0, Math.min(tl.x, tr.x, bl.x, br.x) - margin),
+        maxX: Math.min(GRID_SIZE - 1, Math.max(tl.x, tr.x, bl.x, br.x) + margin),
+        minY: Math.max(0, Math.min(tl.y, tr.y, bl.y, br.y) - margin),
+        maxY: Math.min(GRID_SIZE - 1, Math.max(tl.y, tr.y, bl.y, br.y) + margin)
+    };
+    return cachedBounds;
+}
+
+function render() {
+    var skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    skyGrad.addColorStop(0, '#87ceeb'); skyGrad.addColorStop(0.5, '#b8e0f0'); skyGrad.addColorStop(1, '#d8e8c8');
+    ctx.fillStyle = skyGrad; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    var bounds = getVisibleBounds();
+    for (var sum = bounds.minX + bounds.minY; sum <= bounds.maxX + bounds.maxY; sum++) {
+        for (var yy = bounds.minY; yy <= bounds.maxY; yy++) {
+            var xx = sum - yy;
+            if (xx < bounds.minX || xx > bounds.maxX) continue;
+            var tile = tileMap[xx + ',' + yy];
+            if (!tile) continue;
+            drawTile(xx, yy, getTileColors(tile.type));
+        }
+    }
+    drawHoverTile();
+    if (state.sortedBuildingsCount !== state.buildings.length) {
+        state.sortedBuildings = state.buildings.slice().sort(function(a, b) { return (a.x + a.y) - (b.x + b.y); });
+        state.sortedBuildingsCount = state.buildings.length;
+    }
+    for (var k = 0; k < state.sortedBuildings.length; k++) drawBuilding(state.sortedBuildings[k]);
+    drawParticles();
+}
+
+// ============== بهینه‌سازی: Minimap Throttle ==============
+var lastFrameTime = 0, TARGET_FPS = 60, FRAME_INTERVAL = 1000 / TARGET_FPS;
+var lastMinimapUpdate = 0;
+var MINIMAP_INTERVAL = 1000;
+
+function gameLoop(timestamp) {
+    requestAnimationFrame(gameLoop);
+    if (!timestamp) timestamp = performance.now();
+    if (timestamp - state.lastIncomeTime >= INCOME_INTERVAL) {
+        state.lastIncomeTime = timestamp;
+        produceIncome();
+    }
+    var elapsed = timestamp - lastFrameTime;
+    if (elapsed < FRAME_INTERVAL) return;
+    lastFrameTime = timestamp - (elapsed % FRAME_INTERVAL);
+    state.time++;
+    render();
+    // Minimap throttle
+    if (timestamp - lastMinimapUpdate > MINIMAP_INTERVAL) {
+        lastMinimapUpdate = timestamp;
+        updateMinimap();
+    }
+}
+
+function produceIncome() {
+    var totalCoins = 0, totalEnergy = 0;
+    for (var i = 0; i < state.buildings.length; i++) {
+        var b = state.buildings[i], def = BUILDING_TYPES[b.type];
+        if (def.income === 'none') continue;
+        if (def.income === 'coins') totalCoins += 1;
+        else if (def.income === 'energy') totalEnergy += 1;
+    }
+    if (totalCoins > 0) { state.coins += totalCoins; popResource('resCoins'); }
+    if (totalEnergy > 0) { state.energy += totalEnergy; popResource('resEnergy'); }
+    updateHUD();
+    refreshShop();
+}
+
+function popResource(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('pop');
+    setTimeout(function() { el.classList.remove('pop'); }, 200);
+}
+
+var minimapCanvas = document.getElementById('minimapCanvas');
+var mmCtx = minimapCanvas.getContext('2d');
+minimapCanvas.width = 140; minimapCanvas.height = 100;
+var minimapLastBuildingsCount = -1;
+
+function updateMinimap() {
+    if (state.buildings.length === minimapLastBuildingsCount) return;
+    minimapLastBuildingsCount = state.buildings.length;
+    mmCtx.fillStyle = '#4a8a3a';
+    mmCtx.fillRect(0, 0, 140, 100);
+    var cellW = 140 / GRID_SIZE, cellH = 100 / GRID_SIZE;
+    for (var j = 0; j < state.buildings.length; j++) {
+        var b = state.buildings[j], def = BUILDING_TYPES[b.type];
+        mmCtx.fillStyle = def.roof;
+        mmCtx.fillRect(b.x * cellW, b.y * cellH, def.size * cellW, def.size * cellH);
+    }
+}
+
+// ============== فروشگاه ==============
+var bottomTabs = document.getElementById('bottomTabs');
+var shopView = document.getElementById('shopView');
+var shopContent = document.getElementById('shopContent');
+var catBuildings = document.getElementById('catBuildings');
+var catDiamond = document.getElementById('catDiamond');
+
+function openShop() {
+    state.shopOpen = true;
+    shopView.classList.add('show');
+    renderShopContent();
+}
+function closeShop() {
+    state.shopOpen = false;
+    shopView.classList.remove('show');
+}
+
+function renderShopContent() {
+    shopContent.innerHTML = '';
+    if (state.shopCategory === 'buildings') {
+        var keys = Object.keys(BUILDING_TYPES);
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (key === 'townhall') continue;
+            var def = BUILDING_TYPES[key];
+            var item = document.createElement('div');
+            item.className = 'shop-item';
+            var canAfford = state.coins >= def.cost;
+            var count = getCountOfType(key);
+            var maxCount = getMaxCountForType(key);
+            var limitReached = count >= maxCount;
+            var guideLocked = (state.guideStep === 0 && key !== 'barracks');
+            item.innerHTML = '<div class="emoji">' + def.emoji + '</div><div class="name">' + def.name + '</div><div class="price">🪙 ' + def.cost + '</div><div class="count-badge">' + count + '/' + maxCount + '</div>';
+            if (!canAfford) item.classList.add('locked');
+            if (guideLocked) item.classList.add('locked-by-guide');
+            if (limitReached && !guideLocked) item.classList.add('limit-reached');
+            (function(key, def, canAfford, item, limitReached, maxCount, guideLocked) {
+                item.addEventListener('click', function() {
+                    if (guideLocked) { showHint('🔒 اول یه پادگان توان بساز!', 2000); return; }
+                    if (limitReached) { showHint('📦 حداکثر ' + maxCount + ' تا!', 2500); return; }
+                    if (!canAfford) { showHint('❌ سکه کافی نداری!'); return; }
+                    var allItems = document.querySelectorAll('.shop-item');
+                    for (var j = 0; j < allItems.length; j++) allItems[j].classList.remove('selected');
+                    if (state.selectedItem === key) {
+                        state.selectedItem = null; hideHint(); closeShop();
+                    } else {
+                        state.selectedItem = key;
+                        item.classList.add('selected');
+                        showHint('روی نقشه کلیک کن تا بسازی');
+                        closeShop();
+                    }
+                });
+            })(key, def, canAfford, item, limitReached, maxCount, guideLocked);
+            shopContent.appendChild(item);
+        }
+        var coming = document.createElement('div');
+        coming.className = 'shop-item coming-locked';
+        coming.innerHTML = '<div class="emoji">🔒</div><div class="name">ادامه‌ی ساختمان‌ها در سطح بعدی تالار شهر باز می‌شود</div><div class="price">به زودی</div>';
+        shopContent.appendChild(coming);
+    } else {
+        var div = document.createElement('div');
+        div.className = 'shop-item special';
+        div.innerHTML = '<div class="emoji">🎁</div><div class="name">صندوق جایزه</div><div class="price">💎 20</div>';
+        div.addEventListener('click', function() {
+            if (state.gems < 20) { showHint('❌ الماس کافی نداری!', 2000); return; }
+            state.gems -= 20;
+            var bc = 100 + Math.floor(Math.random() * 400);
+            var be = 20 + Math.floor(Math.random() * 80);
+            var bg = 5 + Math.floor(Math.random() * 20);
+            state.coins += bc; state.energy += be; state.gems += bg;
+            updateHUD(); renderShopContent(); saveGame();
+            showHint('🎁 +' + bc + '🪙 +' + be + '⚡ +' + bg + '💎', 3000);
+        });
+        shopContent.appendChild(div);
+    }
+}
+
+function refreshShop() { if (state.shopOpen) renderShopContent(); }
+
+document.getElementById('tabShop').addEventListener('click', openShop);
+document.getElementById('bShopBack').addEventListener('click', closeShop);
+catBuildings.addEventListener('click', function() { state.shopCategory = 'buildings'; catBuildings.classList.add('active'); catDiamond.classList.remove('active'); renderShopContent(); });
+catDiamond.addEventListener('click', function() { state.shopCategory = 'diamond'; catDiamond.classList.add('active'); catBuildings.classList.remove('active'); renderShopContent(); });
+
+var hintEl = document.getElementById('hint');
+var hintTimeout;
+function showHint(text, duration) {
+    if (duration === undefined) duration = 2000;
+    hintEl.textContent = text;
+    hintEl.classList.add('show');
+    clearTimeout(hintTimeout);
+    if (duration > 0) hintTimeout = setTimeout(function() { hintEl.classList.remove('show'); }, duration);
+}
+function hideHint() { hintEl.classList.remove('show'); }
+
+// ============== تعامل ماوس و تاچ ==============
+function handlePointerDown(clientX, clientY) {
+    var grid = getGridFromEvent(clientX, clientY);
+    if (state.selectedItem) {
+        var def2 = BUILDING_TYPES[state.selectedItem];
+        var count = getCountOfType(state.selectedItem);
+        var maxCount = getMaxCountForType(state.selectedItem);
+        if (count >= maxCount) { showHint('📦 حداکثر!', 2500); return; }
+        if (canPlaceBuilding(grid.x, grid.y, def2.size)) placeBuilding(grid.x, grid.y, state.selectedItem);
+        else showHint('❌ اینجا نمی‌شه ساخت!');
+        return;
+    }
+    if (grid.x < 0 || grid.x >= GRID_SIZE || grid.y < 0 || grid.y >= GRID_SIZE) return;
+    var clicked = findBuildingAt(grid.x, grid.y);
+    if (clicked) {
+        state.isDragging = true;
+        state.draggingBuilding = clicked;
+        state.dragOffsetX = grid.x - clicked.x;
+        state.dragOffsetY = grid.y - clicked.y;
+        state.dragMoved = false;
+        canvas.style.cursor = 'grabbing';
+    } else {
+        closeActionMenu();
+    }
+}
+
+function handlePointerMove(clientX, clientY) {
+    var newHover = getGridFromEvent(clientX, clientY);
+    state.hoverTile = newHover;
+    if (state.isDragging && state.draggingBuilding) { state.dragMoved = true; canvas.style.cursor = 'grabbing'; return; }
+    if (newHover.x < 0 || newHover.x >= GRID_SIZE || newHover.y < 0 || newHover.y >= GRID_SIZE) { canvas.style.cursor = 'default'; return; }
+    if (state.selectedItem) canvas.style.cursor = 'crosshair';
+    else canvas.style.cursor = findBuildingAt(newHover.x, newHover.y) ? 'pointer' : 'default';
+}
+
+function handlePointerUp(clientX, clientY) {
+    canvas.style.cursor = 'pointer';
+    if (state.isDragging && state.draggingBuilding) {
+        var b = state.draggingBuilding, def = BUILDING_TYPES[b.type];
+        if (state.dragMoved && state.hoverTile) {
+            var newX = state.hoverTile.x - state.dragOffsetX;
+            var newY = state.hoverTile.y - state.dragOffsetY;
+            if (canPlaceBuilding(newX, newY, def.size, b) && (newX !== b.x || newY !== b.y)) {
+                b.x = newX; b.y = newY;
+                minimapLastBuildingsCount = -1;
+                state.sortedBuildingsCount = -1;
+                showHint('✅ جابجا شد!', 1200);
+                saveGame();
+            } else if (newX === b.x && newY === b.y) {
+                var rect = canvas.getBoundingClientRect();
+                openActionMenu(b, clientX - rect.left, clientY - rect.top - 20);
+            } else showHint('❌ اینجا نمی‌شه!', 1200);
+        } else {
+            var rect = canvas.getBoundingClientRect();
+            openActionMenu(b, clientX - rect.left, clientY - rect.top - 20);
+        }
+        state.isDragging = false; state.draggingBuilding = null; state.dragMoved = false;
+        return;
+    }
+    closeActionMenu();
+}
+
+canvas.addEventListener('mousemove', function(e) { handlePointerMove(e.clientX, e.clientY); });
+canvas.addEventListener('mousedown', function(e) { if (e.button === 0) handlePointerDown(e.clientX, e.clientY); });
+canvas.addEventListener('mouseup', function(e) { if (e.button === 0) handlePointerUp(e.clientX, e.clientY); });
+canvas.addEventListener('mouseleave', function() {
+    if (state.isDragging) { state.isDragging = false; state.draggingBuilding = null; state.dragMoved = false; }
+    canvas.style.cursor = 'default';
+});
+
+canvas.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    if (e.touches.length !== 1) return;
+    handlePointerDown(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
+
+canvas.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+    if (e.touches.length !== 1) return;
+    handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
+
+canvas.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    if (e.changedTouches.length === 0) return;
+    handlePointerUp(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+}, { passive: false });
+
+canvas.addEventListener('touchcancel', function() {
+    if (state.isDragging) { state.isDragging = false; state.draggingBuilding = null; state.dragMoved = false; }
+    canvas.style.cursor = 'default';
+});
+
+function placeBuilding(x, y, type) {
+    var def = BUILDING_TYPES[type];
+    if (state.coins < def.cost) { showHint('❌ سکه کافی نداری!'); return; }
+    state.coins -= def.cost;
+    updateHUD();
+    var b = { x: x, y: y, type: type, level: 1, power: def.power };
+    state.buildings.push(b);
+    minimapLastBuildingsCount = -1;
+    state.sortedBuildingsCount = -1;
+    state.selectedItem = null;
+    var allItems = document.querySelectorAll('.shop-item');
+    for (var j = 0; j < allItems.length; j++) allItems[j].classList.remove('selected');
+    hideHint();
+    showHint('✅ ' + def.name + ' ساخته شد!', 1500);
+
+    if (type === 'barracks' && state.guideStep === 0) {
+        state.guideStep = 1;
+        if (!state.tutorialShown) {
+            state.tutorialShown = true;
+            setTimeout(function() { document.getElementById('barracksTutorial').classList.remove('hidden'); }, 1000);
+        }
+    }
+    if (type === 'temple' && !state.templeTutorialShown) {
+        state.templeTutorialShown = true;
+        setTimeout(function() { document.getElementById('templeTutorial').classList.remove('hidden'); }, 1000);
+    }
+    if (type === 'armybarracks' && !state.armyTutorialShown) {
+        state.armyTutorialShown = true;
+        setTimeout(function() { document.getElementById('armyBarracksTutorial').classList.remove('hidden'); }, 1000);
+    }
+    refreshShop();
+    saveGame();
+}
+
+function findBuildingAt(gx, gy) {
+    for (var i = state.buildings.length - 1; i >= 0; i--) {
+        var b = state.buildings[i], def = BUILDING_TYPES[b.type];
+        if (gx >= b.x && gx < b.x + def.size && gy >= b.y && gy < b.y + def.size) return b;
+    }
+    return null;
+}
+
+function updateHUD() {
+    document.getElementById('hCoins').textContent = state.coins;
+    document.getElementById('hEnergy').textContent = state.energy;
+    document.getElementById('hGems').textContent = state.gems;
+    document.getElementById('hLevel').textContent = state.realmName;
+}
+
+// ============== منوی اکشن ==============
+var actionMenu = document.getElementById('actionMenu');
+var menuHeader = document.getElementById('menuHeader');
+var menuUpgrade = document.getElementById('menuUpgrade');
+var menuUpgradePrice = document.getElementById('menuUpgradePrice');
+var menuQuiz = document.getElementById('menuQuiz');
+var menuArmy = document.getElementById('menuArmy');
+var menuSell = document.getElementById('menuSell');
+var menuClose = document.getElementById('menuClose');
+
+function openActionMenu(b, screenX, screenY) {
+    state.selectedBuilding = b;
+    var def = BUILDING_TYPES[b.type], lvl = b.level;
+    menuHeader.innerHTML = def.emoji + ' ' + def.name + ' <span class="lvl-badge">سطح ' + lvl + '</span>';
+    if (lvl >= 5) {
+        menuUpgrade.classList.add('locked');
+        menuUpgradePrice.textContent = '⭐ حداکثر';
+    } else {
+        var cost = getUpgradeCost(b);
+        if (state.coins < cost) {
+            menuUpgrade.classList.add('locked');
+            menuUpgradePrice.textContent = '❌ ' + cost + ' سکه (کم)';
+        } else {
+            menuUpgrade.classList.remove('locked');
+            menuUpgradePrice.textContent = '🪙 ' + cost;
+        }
+    }
+    menuQuiz.style.display = (b.type === 'barracks' || b.type === 'temple') ? 'flex' : 'none';
+    menuArmy.style.display = (b.type === 'armybarracks') ? 'flex' : 'none';
+    menuSell.style.display = (b.type === 'townhall') ? 'none' : 'flex';
+    var menuW = 220, menuH = 300;
+    var maxX = window.innerWidth - menuW / 2 - 10;
+    var minX = menuW / 2 + 10;
+    if (screenX > maxX) screenX = maxX;
+    if (screenX < minX) screenX = minX;
+    if (screenY < menuH + 10) screenY = menuH + 10;
+    actionMenu.style.left = screenX + 'px';
+    actionMenu.style.top = screenY + 'px';
+    actionMenu.classList.add('show');
+}
+
+function closeActionMenu() {
+    actionMenu.classList.remove('show');
+    state.selectedBuilding = null;
+}
+
+menuClose.addEventListener('click', closeActionMenu);
+
+menuUpgrade.addEventListener('click', function() {
+    if (!state.selectedBuilding) return;
+    var b = state.selectedBuilding;
+    if (b.level >= 5) { showHint('⭐ حداکثر!', 2000); return; }
+    var cost = getUpgradeCost(b);
+    if (state.coins < cost) { showHint('❌ ' + cost + ' سکه لازم داری!', 2000); return; }
+    state.coins -= cost;
+    b.level++;
+    updateHUD();
+    refreshShop();
+    saveGame();
+    showHint('⬆️ سطح ' + b.level + '!', 1500);
+    closeActionMenu();
+});
+
+menuQuiz.addEventListener('click', function() {
+    if (!state.selectedBuilding) return;
+    var b = state.selectedBuilding;
+    if (b.type !== 'barracks' && b.type !== 'temple') return;
+    var quizType = (b.type === 'barracks') ? 'power' : 'sqrt';
+    var lvl = b.level;
+    closeActionMenu();
+    openQuiz(quizType, lvl);
+});
+
+menuArmy.addEventListener('click', function() {
+    if (!state.selectedBuilding) return;
+    if (state.selectedBuilding.type !== 'armybarracks') return;
+    closeActionMenu();
+    openArmyModal();
+});
+
+menuSell.addEventListener('click', function() {
+    if (!state.selectedBuilding) return;
+    var b = state.selectedBuilding;
+    if (b.type === 'townhall') return;
+    var def = BUILDING_TYPES[b.type];
+    var refund = Math.floor(def.cost * 0.5 * b.level);
+    state.coins += refund;
+    state.buildings = state.buildings.filter(function(x) { return x !== b; });
+    minimapLastBuildingsCount = -1;
+    state.sortedBuildingsCount = -1;
+    updateHUD();
+    refreshShop();
+    saveGame();
+    showHint('🗑️ +' + refund + ' 🪙', 1500);
+    closeActionMenu();
+});
+
+// ============== کوییز ==============
+var quizState = { coins: 0, correct: 0, wrong: 0, currentAnswer: null, locked: false, level: 1, coinsPerCorrect: 10, isDecimal: false, type: 'power' };
+function powHtml(base, exp) { return base + '<sup>' + exp + '</sup>'; }
+function sqrtHtml(inner) { return '√' + inner; }
+
+function generatePowerQuestion(level) {
+    if (!level) level = 1;
+    if (level > 5) level = 5;
+    var patterns = [];
+    if (level === 1) patterns = [
+        function() { var b = 2 + Math.floor(Math.random() * 2), p = 2 + Math.floor(Math.random() * 2); return { q: powHtml(b, p), a: Math.pow(b, p) }; },
+        function() { var b = 4 + Math.floor(Math.random() * 2); return { q: powHtml(b, 2), a: b * b }; }
+    ];
+    else if (level === 2) patterns = [
+        function() { var b = 2 + Math.floor(Math.random() * 2), p1 = 1 + Math.floor(Math.random() * 3), p2 = 1 + Math.floor(Math.random() * 3); return { q: powHtml(b, p1) + ' + ' + powHtml(b, p2), a: Math.pow(b, p1) + Math.pow(b, p2) }; }
+    ];
+    else patterns = [function() { return { q: powHtml(2, 5), a: 32 }; }];
+    var p = patterns[Math.floor(Math.random() * patterns.length)]();
+    return buildQuizObject(p.q, p.a, p.decimal || false);
+}
+
+function generateSqrtQuestion(level) {
+    if (!level) level = 1;
+    if (level > 5) level = 5;
+    var patterns = [
+        function() { var r = 2 + Math.floor(Math.random() * 4); return { q: sqrtHtml(r*r), a: r }; }
+    ];
+    var p = patterns[Math.floor(Math.random() * patterns.length)]();
+    return buildQuizObject(p.q, p.a, false);
+}
+
+function buildQuizObject(question, answer, isDecimal) {
+    var options = [answer];
+    var offsetMax = Math.max(4, Math.ceil(Math.abs(answer) * 0.3));
+    var attempts = 0;
+    while (options.length < 4 && attempts < 50) {
+        attempts++;
+        var offset = (Math.random() < 0.5 ? -1 : 1) * (1 + Math.floor(Math.random() * offsetMax));
+        var fake = answer + offset;
+        if (fake >= 0 && options.indexOf(fake) === -1) options.push(fake);
+    }
+    options.sort(function() { return Math.random() - 0.5; });
+    return { question: question, answer: answer, options: options, isDecimal: isDecimal };
+}
+
+function showQuizQuestion() {
+    var q = (quizState.type === 'sqrt') ? generateSqrtQuestion(quizState.level) : generatePowerQuestion(quizState.level);
+    quizState.currentAnswer = q.answer;
+    quizState.isDecimal = q.isDecimal || false;
+    quizState.locked = false;
+    document.getElementById('quizQuestion').innerHTML = q.question;
+    var optsBox = document.getElementById('quizOptions');
+    optsBox.innerHTML = '';
+    document.getElementById('quizFeedback').textContent = '';
+    for (var i = 0; i < q.options.length; i++) {
+        var btn = document.createElement('button');
+        btn.className = 'quiz-opt';
+        btn.textContent = q.options[i];
+        btn.dataset.value = q.options[i];
+        (function(btn, isDecimal) {
+            btn.addEventListener('click', function() {
+                if (quizState.locked) return;
+                quizState.locked = true;
+                var val = parseFloat(btn.dataset.value);
+                var allOpts = document.querySelectorAll('.quiz-opt');
+                for (var j = 0; j < allOpts.length; j++) allOpts[j].disabled = true;
+                var isCorrect = isDecimal ? Math.abs(val - quizState.currentAnswer) < 0.001 : val === quizState.currentAnswer;
+                if (isCorrect) {
+                    btn.classList.add('correct');
+                    quizState.correct++;
+                    quizState.coins += quizState.coinsPerCorrect;
+                    document.getElementById('quizFeedback').textContent = '✅ +' + quizState.coinsPerCorrect + ' سکه';
+                    document.getElementById('quizFeedback').className = 'quiz-feedback correct';
+                } else {
+                    btn.classList.add('wrong');
+                    quizState.wrong++;
+                    document.getElementById('quizFeedback').textContent = '❌ جواب: ' + quizState.currentAnswer;
+                    document.getElementById('quizFeedback').className = 'quiz-feedback wrong';
+                    for (var k = 0; k < allOpts.length; k++) {
+                        var ov = parseFloat(allOpts[k].dataset.value);
+                        if (ov === quizState.currentAnswer) allOpts[k].classList.add('correct');
+                    }
+                }
+                document.getElementById('quizCoins').textContent = quizState.coins;
+                document.getElementById('quizCorrect').textContent = quizState.correct;
+                document.getElementById('quizWrong').textContent = quizState.wrong;
+                setTimeout(function() { showQuizQuestion(); }, 1600);
+            });
+        })(btn, q.isDecimal);
+        optsBox.appendChild(btn);
+    }
+}
+
+function openQuiz(type, level) {
+    quizState.type = type;
+    quizState.level = level || 1;
+    quizState.coinsPerCorrect = 10 + (quizState.level - 1) * 5;
+    quizState.coins = 0; quizState.correct = 0; quizState.wrong = 0;
+    document.getElementById('quizCoins').textContent = '0';
+    document.getElementById('quizCorrect').textContent = '0';
+    document.getElementById('quizWrong').textContent = '0';
+    document.getElementById('quizTitle').textContent = (type === 'sqrt' ? '√ حل سوال جذر' : '⚡ حل سوال توان') + ' — سطح ' + quizState.level;
+    document.getElementById('powerQuiz').classList.remove('hidden');
+    showQuizQuestion();
+}
+
+function closeQuiz() {
+    state.coins += quizState.coins;
+    updateHUD();
+    refreshShop();
+    saveGame();
+    document.getElementById('powerQuiz').classList.add('hidden');
+    if (quizState.coins > 0) showHint('🎉 ' + quizState.coins + ' سکه!', 2000);
+}
+
+document.getElementById('bQuizBack').addEventListener('click', closeQuiz);
+
+// ============== ترید ==============
+var tradeModal = document.getElementById('tradeModal');
+function openTradeModal() {
+    document.getElementById('tradeEnergy').textContent = state.energy;
+    document.getElementById('tradeCoins').textContent = state.coins;
+    var optsBox = document.getElementById('tradeOptions');
+    optsBox.innerHTML = '';
+    for (var i = 0; i < TRADE_RATES.length; i++) {
+        var rate = TRADE_RATES[i];
+        var btn = document.createElement('button');
+        btn.className = 'trade-option';
+        btn.disabled = state.energy < rate.energy;
+        btn.innerHTML = '<span class="trade-cost">⚡ ' + rate.energy + '</span><span>←</span><span class="trade-give">🪙 ' + rate.coins + '</span>';
+        (function(rate) {
+            btn.addEventListener('click', function() {
+                if (state.energy < rate.energy) return;
+                state.energy -= rate.energy;
+                state.coins += rate.coins;
+                updateHUD();
+                refreshShop();
+                saveGame();
+                document.getElementById('tradeEnergy').textContent = state.energy;
+                document.getElementById('tradeCoins').textContent = state.coins;
+                popResource('resCoins'); popResource('resEnergy');
+                showHint('✅ ' + rate.energy + ' → ' + rate.coins + ' سکه!', 1500);
+                openTradeModal();
+            });
+        })(rate);
+        optsBox.appendChild(btn);
+    }
+    tradeModal.classList.remove('hidden');
+}
+document.getElementById('bTradeClose').addEventListener('click', function() { tradeModal.classList.add('hidden'); });
+document.getElementById('tabTrade').addEventListener('click', openTradeModal);
+document.getElementById('tabBattle').addEventListener('click', function() { document.getElementById('battleModal').classList.remove('hidden'); });
+document.getElementById('tabLeague').addEventListener('click', function() { document.getElementById('leagueModal').classList.remove('hidden'); });
+document.getElementById('bBattleClose').addEventListener('click', function() { document.getElementById('battleModal').classList.add('hidden'); });
+document.getElementById('bLeagueClose').addEventListener('click', function() { document.getElementById('leagueModal').classList.add('hidden'); });
+
+// ============== دوربین ==============
+document.getElementById('bZoomIn').addEventListener('click', function() {
+    state.camera.zoom = Math.min(2, state.camera.zoom + 0.15);
+    canvas.style.transform = 'scale(' + state.camera.zoom + ')';
+});
+document.getElementById('bZoomOut').addEventListener('click', function() {
+    state.camera.zoom = Math.max(0.5, state.camera.zoom - 0.15);
+    canvas.style.transform = 'scale(' + state.camera.zoom + ')';
+});
+document.getElementById('bCenter').addEventListener('click', function() {
+    state.camera.zoom = 1;
+    canvas.style.transform = 'scale(1)';
+    centerCamera();
+    saveGame();
+});
+document.getElementById('bMenu').addEventListener('click', function() {
+    saveGame();
+    document.getElementById('gameScreen').classList.remove('active');
+    document.getElementById('startScreen').classList.remove('hidden');
+    closeActionMenu(); closeShop(); closeArmyModal();
+});
+
+// ============== Three.js سه‌بعدی سربازها ==============
+var armyScene, armyCamera, armyRenderer;
+var armyUnitModels = {};
+var armyCurrentUnit = 'knight';
+var armyClock = null;
+var armyAnimFrame3D = null;
+
+var UNIT_COLORS = {
+    knight:     { primary: 0x3b82f6, secondary: 0x1e3a8a, accent: 0xfbbf24, glow: 0x60a5fa },
+    archer:     { primary: 0x22c55e, secondary: 0x14532d, accent: 0xffd93d, glow: 0x4ade80 },
+    ogre:       { primary: 0xef4444, secondary: 0x7f1d1d, accent: 0xfbbf24, glow: 0xf87171 },
+    pythagoras: { primary: 0xfbbf24, secondary: 0x78350f, accent: 0xfffbeb, glow: 0xfcd34d }
+};
+
+function initArmyScene() {
+    var container = document.getElementById('armyScene');
+    if (!container) return;
+    if (typeof THREE === 'undefined') {
+        container.innerHTML = '<div style="color:#fff;text-align:center;padding:40px;font-size:16px;">⚠️ کتابخانه Three.js لود نشده!</div>';
+        return;
+    }
+    while (container.firstChild) container.removeChild(container.firstChild);
+    var W = container.clientWidth || window.innerWidth;
+    var H = container.clientHeight || window.innerHeight;
+    armyScene = new THREE.Scene();
+    armyCamera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
+    armyCamera.position.set(0, 1.2, 5.5);
+    armyCamera.lookAt(0, 0.5, 0);
+    armyRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    armyRenderer.setSize(W, H);
+    armyRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(armyRenderer.domElement);
+    armyScene.add(new THREE.AmbientLight(0x4466aa, 0.5));
+    var kl = new THREE.DirectionalLight(0xffffff, 1.0); kl.position.set(3, 5, 4); armyScene.add(kl);
+    var fl = new THREE.DirectionalLight(0x6688cc, 0.4); fl.position.set(-4, 2, 3); armyScene.add(fl);
+    buildAllUnitModels();
+    showUnit(armyCurrentUnit);
+    armyClock = new THREE.Clock();
+    startArmyRenderLoop();
+    window.addEventListener('resize', onArmyResize);
+}
+
+function onArmyResize() {
+    if (!armyRenderer || !armyCamera) return;
+    var container = document.getElementById('armyScene');
+    if (!container) return;
+    armyCamera.aspect = container.clientWidth / container.clientHeight;
+    armyCamera.updateProjectionMatrix();
+    armyRenderer.setSize(container.clientWidth, container.clientHeight);
+}
+
+function box(w, h, d, color, opts) { opts = opts || {}; var g = new THREE.BoxGeometry(w, h, d); var m = new THREE.MeshStandardMaterial({ color: color, metalness: opts.metalness || 0.4, roughness: opts.roughness || 0.6, emissive: opts.emissive || 0x000000, emissiveIntensity: opts.emissiveIntensity || 0 }); return new THREE.Mesh(g, m); }
+function sphere(r, color, opts) { opts = opts || {}; var g = new THREE.SphereGeometry(r, 24, 24); var m = new THREE.MeshStandardMaterial({ color: color, metalness: opts.metalness || 0.3, roughness: opts.roughness || 0.7, emissive: opts.emissive || 0x000000, emissiveIntensity: opts.emissiveIntensity || 0 }); return new THREE.Mesh(g, m); }
+function cyl(rt, rb, h, color, opts) { opts = opts || {}; var g = new THREE.CylinderGeometry(rt, rb, h, 16); var m = new THREE.MeshStandardMaterial({ color: color, metalness: opts.metalness || 0.4, roughness: opts.roughness || 0.6, emissive: opts.emissive || 0x000000, emissiveIntensity: opts.emissiveIntensity || 0 }); return new THREE.Mesh(g, m); }
+function cone(r, h, color, opts) { opts = opts || {}; var g = new THREE.ConeGeometry(r, h, 12); var m = new THREE.MeshStandardMaterial({ color: color, metalness: opts.metalness || 0.4, roughness: opts.roughness || 0.6, emissive: opts.emissive || 0x000000, emissiveIntensity: opts.emissiveIntensity || 0 }); return new THREE.Mesh(g, m); }
+
+function buildKnightModel() {
+    var g = new THREE.Group(); var C = UNIT_COLORS.knight;
+    var base = cyl(0.55, 0.65, 0.15, 0x1a2540); base.position.y = 0.075; g.add(base);
+    var torso = box(0.55, 0.6, 0.35, C.primary); torso.position.y = 0.85; g.add(torso);
+    var head = sphere(0.18, 0xfbbf24); head.position.y = 1.32; g.add(head);
+    var helmet = sphere(0.22, 0xb0b8c4); helmet.position.y = 1.38; helmet.scale.y = 0.85; g.add(helmet);
+    var swordG = new THREE.Group();
+    var blade = box(0.05, 0.7, 0.02, 0xe2e8f0); blade.position.y = 0.35; swordG.add(blade);
+    swordG.position.set(0.42, 0.9, 0.05); swordG.rotation.z = -0.3; g.add(swordG);
+    return g;
+}
+
+function buildArcherModel() {
+    var g = new THREE.Group(); var C = UNIT_COLORS.archer;
+    var base = cyl(0.55, 0.65, 0.15, 0x1a2a15); base.position.y = 0.075; g.add(base);
+    var torso = box(0.5, 0.55, 0.32, C.primary); torso.position.y = 0.9; g.add(torso);
+    var head = sphere(0.17, 0xfbbf24); head.position.y = 1.32; g.add(head);
+    return g;
+}
+
+function buildOgreModel() {
+    var g = new THREE.Group(); var C = UNIT_COLORS.ogre;
+    var base = cyl(0.75, 0.85, 0.18, 0x2a1a1a); base.position.y = 0.09; g.add(base);
+    var torso = sphere(0.55, C.primary); torso.scale.set(1.15, 1, 0.85); torso.position.y = 0.95; g.add(torso);
+    var head = sphere(0.3, 0xfca5a5); head.position.y = 1.55; g.add(head);
+    return g;
+}
+
+function buildPythagorasModel() {
+    var g = new THREE.Group(); var C = UNIT_COLORS.pythagoras;
+    var base = cyl(0.6, 0.7, 0.15, 0x5a3818); base.position.y = 0.075; g.add(base);
+    var robe = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.55, 1.15, 16), new THREE.MeshStandardMaterial({ color: C.primary })); robe.position.y = 0.7; g.add(robe);
+    var head = sphere(0.2, 0xfbbf24); head.position.y = 1.42; g.add(head);
+    return g;
+}
+
+function buildAllUnitModels() {
+    armyUnitModels.knight = buildKnightModel();
+    armyUnitModels.archer = buildArcherModel();
+    armyUnitModels.ogre = buildOgreModel();
+    armyUnitModels.pythagoras = buildPythagorasModel();
+    for (var key in armyUnitModels) {
+        if (armyUnitModels.hasOwnProperty(key)) {
+            armyUnitModels[key].visible = false;
+            armyScene.add(armyUnitModels[key]);
+        }
+    }
+}
+
+function showUnit(unitId) {
+    if (!armyUnitModels[unitId]) return;
+    for (var key in armyUnitModels) {
+        if (armyUnitModels.hasOwnProperty(key)) armyUnitModels[key].visible = false;
+    }
+    var model = armyUnitModels[unitId];
+    model.visible = true;
+    model.position.set(0, 0, 0);
+    model.rotation.y = 0;
+    model.scale.set(1, 1, 1);
+    armyCurrentUnit = unitId;
+}
+
+function startArmyRenderLoop() {
+    if (armyAnimFrame3D) cancelAnimationFrame(armyAnimFrame3D);
+    function loop() {
+        armyAnimFrame3D = requestAnimationFrame(loop);
+        if (!armyRenderer || !armyScene || !armyCamera) return;
+        var time = armyClock.getElapsedTime();
+        var cm = armyUnitModels[armyCurrentUnit];
+        if (cm && cm.visible) {
+            cm.position.y = Math.sin(time * 1.5) * 0.06;
+            cm.rotation.y += 0.003;
+        }
+        armyRenderer.render(armyScene, armyCamera);
+    }
+    loop();
+}
+
+var armyModal = document.getElementById('armyModal');
+
+function openArmyModal() {
+    armyModal.classList.remove('hidden');
+    setTimeout(function() {
+        initArmyScene();
+        renderArmyPanel();
+        setupArmyCardInteractions();
+    }, 200);
+}
+function closeArmyModal() { armyModal.classList.add('hidden'); }
+
+function renderArmyPanel() {
+    document.getElementById('armyUsed').textContent = getTotalArmyCount();
+    document.getElementById('armyCap').textContent = getTotalArmyCapacity();
+    document.getElementById('armyCoins').textContent = state.coins;
+    document.getElementById('armyPower').textContent = getTotalArmyPower();
+    var panel = document.getElementById('armyBottomPanel');
+    panel.innerHTML = '';
+    var keys = Object.keys(ARMY_UNITS);
+    for (var i = 0; i < keys.length; i++) {
+        var unit = ARMY_UNITS[keys[i]];
+        var currentCount = state.army[unit.id] || 0;
+        var canAfford = state.coins >= unit.cost;
+        var hasSpace = getTotalArmyCount() < getTotalArmyCapacity();
+        var card = document.createElement('div');
+        card.className = 'unit-info-card';
+        card.dataset.unit = unit.id;
+        if (i === 0) card.classList.add('selected');
+        card.innerHTML = '<div class="uic-header"><span class="uic-icon">' + unit.icon + '</span><span class="uic-name">' + unit.name + '</span></div>' +
+            '<div class="uic-stats"><div class="uic-stat hp"><span>❤️</span><br><span class="v">' + unit.hp + '</span></div><div class="uic-stat atk"><span>⚔️</span><br><span class="v">' + unit.atk + '</span></div><div class="uic-stat spd"><span>⚡</span><br><span class="v">' + unit.spd + '</span></div></div>' +
+            '<div class="uic-ability">' + unit.ability + '</div>' +
+            '<div class="uic-count-row"><span class="lbl">نیروها:</span><span class="val">' + currentCount + '</span><span class="prc">🪙 ' + unit.cost + '</span></div>' +
+            '<button class="uic-buy">' + (hasSpace ? (canAfford ? '⚔️ دریافت نیرو' : '❌ سکه کم') : '📦 ظرفیت پر') + '</button>';
+        (function(unit, canAfford, hasSpace) {
+            var buyBtn = card.querySelector('.uic-buy');
+            if (!canAfford || !hasSpace) buyBtn.disabled = true;
+            buyBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!hasSpace) { showHint('📦 ظرفیت پره!', 2000); return; }
+                if (state.coins < unit.cost) { showHint('❌ سکه کافی نداری!', 2000); return; }
+                state.coins -= unit.cost;
+                state.army[unit.id] = (state.army[unit.id] || 0) + 1;
+                updateHUD();
+                renderArmyPanel();
+                setupArmyCardInteractions();
+                saveGame();
+                popResource('resCoins');
+                showHint('✅ ' + unit.name + '! (-' + unit.cost + ')', 1500);
+            });
+        })(unit, canAfford, hasSpace);
+        panel.appendChild(card);
+    }
+}
+
+function setupArmyCardInteractions() {
+    var cards = document.querySelectorAll('.unit-info-card');
+    for (var i = 0; i < cards.length; i++) {
+        (function(card) {
+            card.addEventListener('click', function() {
+                var unitId = card.dataset.unit;
+                if (!unitId) return;
+                var allCards = document.querySelectorAll('.unit-info-card');
+                for (var j = 0; j < allCards.length; j++) allCards[j].classList.remove('selected');
+                card.classList.add('selected');
+                showUnit(unitId);
+            });
+        })(cards[i]);
+    }
+}
+
+document.getElementById('bArmyClose').addEventListener('click', closeArmyModal);
+
+// ============== ورود / خروج ==============
+function showLoginScreen() {
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('gameScreen').classList.remove('active');
+}
+
+function showStartScreen() {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('startScreen').classList.remove('hidden');
+    document.getElementById('welcomeUser').textContent = '👋 ' + (state.userName || USER_NAME);
+}
+
+document.getElementById('bLogin').addEventListener('click', function() {
+    var input = document.getElementById('nationalIdInput');
+    var errEl = document.getElementById('loginError');
+    var val = (input.value || '').trim();
+    if (val !== NATIONAL_ID) {
+        errEl.classList.add('show');
+        input.style.borderColor = '#f87171';
+        setTimeout(function() {
+            input.style.borderColor = '#8b5a2b';
+            errEl.classList.remove('show');
+        }, 2500);
+        return;
+    }
+    state.nationalId = NATIONAL_ID;
+    state.userName = USER_NAME;
+    state.realmName = 'قلمرو ' + USER_NAME;
+    saveGame();
+    showStartScreen();
+    updateHUD();
+});
+
+document.getElementById('nationalIdInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('bLogin').click();
+});
+
+// ============== شروع بازی ==============
+document.getElementById('bStart').addEventListener('click', function() {
+    var ss = document.getElementById('startScreen');
+    ss.classList.add('hidden');
+    document.getElementById('gameScreen').classList.add('active');
+    if (state.buildings.length === 0) {
+        var cx = Math.floor(GRID_SIZE / 2) - 1;
+        var cy = Math.floor(GRID_SIZE / 2) - 1;
+        state.buildings.push({ x: cx, y: cy, type: 'townhall', level: 1, power: 50 });
+        saveGame();
+    }
+    updateHUD();
+    centerCamera();
+    minimapLastBuildingsCount = -1;
+    state.sortedBuildingsCount = -1;
+    state.lastIncomeTime = performance.now();
+    if (!state.welcomeShown) {
+        state.welcomeShown = true;
+        setTimeout(showWelcomeModal, 800);
+    }
+});
+
+function showWelcomeModal() {
+    var modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = '<div class="tutorial-box">' +
+        '<div class="tutorial-icon">🏰</div>' +
+        '<h2>به قلمرو اعداد خوش اومدی!</h2>' +
+        '<p class="tutorial-text">' +
+        'برای شروع، به یه <b>پادگان توان ⚡</b> نیاز داری.<br><br>' +
+        'روی <b>🛒 فروشگاه</b> توی نوار پایین کلیک کن.' +
+        '</p>' +
+        '<button class="btn green" id="bWelcomeOk"><span class="icon">✅</span> بزن بریم!</button>' +
+        '</div>';
+    document.body.appendChild(modal);
+    document.getElementById('bWelcomeOk').addEventListener('click', function() {
+        modal.remove();
+        saveGame();
+    });
+}
+
+document.getElementById('bSettings').addEventListener('click', function() { alert('⚙️ به زودی'); });
+document.getElementById('bTutorial').addEventListener('click', function() { alert('📖 به زودی'); });
+
+document.getElementById('bTutorialOk').addEventListener('click', function() {
+    document.getElementById('barracksTutorial').classList.add('hidden');
+    state.tutorialShown = true;
+    saveGame();
+    setTimeout(function() { openQuiz('power', 1); }, 300);
+});
+document.getElementById('bTempleTutorialOk').addEventListener('click', function() {
+    document.getElementById('templeTutorial').classList.add('hidden');
+    saveGame();
+    setTimeout(function() { openQuiz('sqrt', 1); }, 300);
+});
+document.getElementById('bArmyBarracksTutorialOk').addEventListener('click', function() {
+    document.getElementById('armyBarracksTutorial').classList.add('hidden');
+    saveGame();
+    setTimeout(openArmyModal, 300);
+});
+
+// ============== شروع ==============
+function boot() {
+    var hasSave = loadGame();
+    if (hasSave && state.nationalId === NATIONAL_ID) {
+        // کاربر قبلاً وارد شده — مستقیم برو صفحه شروع
+        document.getElementById('loginScreen').classList.add('hidden');
+        showStartScreen();
+        updateHUD();
+    } else {
+        // نیاز به ورود
+        showLoginScreen();
+    }
+    requestAnimationFrame(gameLoop);
+    startAutosave();
+}
+
+boot();
+</script>
+
+</body>
+</html>
