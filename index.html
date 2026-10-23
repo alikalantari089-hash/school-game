@@ -1055,6 +1055,12 @@ h1 {
 
 // ============== تنظیمات ذخیره‌سازی ==============
 var STORAGE_KEY = 'ghalamro_argham_save_v1';
+    var GITHUB_CONFIG = {
+    token: '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',
+    owner: 'alikalantari089-hash',
+    repo: 'school-game',
+    path: 'players.json'
+};
 var NATIONAL_ID = '0153524774';
 var USER_NAME = 'امیرحسین کلانتری';
 var AUTOSAVE_INTERVAL = 3000;
@@ -1110,6 +1116,24 @@ function saveGame() {
         if (!state.nationalId) return;
         var data = getSaveData();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            // ارسال به گیت‌هاب
+    if (state.nationalId) {
+        (async function() {
+            try {
+                var url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+                var res = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_CONFIG.token}` } });
+                var data = { players: {}, attacks: [] };
+                var sha = null;
+                if (res.ok) { var json = await res.json(); sha = json.sha; data = JSON.parse(atob(json.content)); }
+                
+                data.players[state.nationalId] = { nationalId: state.nationalId, name: state.userName || 'بازیکن', energy: state.energy, lastSeen: Date.now() };
+                
+                var body = { message: "Save Player", content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))) };
+                if (sha) body.sha = sha;
+                await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${GITHUB_CONFIG.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            } catch(e) {}
+        })();
+    }
     } catch (e) {
         console.warn('save error:', e);
     }
@@ -2210,7 +2234,49 @@ function openTradeModal() {
 document.getElementById('bTradeClose').addEventListener('click', function() { tradeModal.classList.add('hidden'); });
 document.getElementById('tabTrade').addEventListener('click', openTradeModal);
 document.getElementById('tabBattle').addEventListener('click', function() { document.getElementById('battleModal').classList.remove('hidden'); });
-document.getElementById('tabLeague').addEventListener('click', function() { document.getElementById('leagueModal').classList.remove('hidden'); });
+document.getElementById('tabLeague').addEventListener('click', async function() {
+    var modal = document.getElementById('leagueModal');
+    var box = modal.querySelector('.coming-soon-box');
+    box.innerHTML = '<div class="coming-soon-icon">🏆</div><h2>لیگ</h2><p>در حال دریافت اطلاعات...</p>';
+    modal.classList.remove('hidden');
+
+    try {
+        // گرفتن اطلاعات از گیت‌هاب
+        var url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+        var res = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_CONFIG.token}` } });
+        var data = res.ok ? JSON.parse(atob((await res.json()).content)) : { players: {}, attacks: [] };
+        
+        var playersArr = Object.values(data.players || {});
+        playersArr.sort((a, b) => b.energy - a.energy);
+
+        var html = '<div class="coming-soon-icon">🏆</div><h2>لیگ قهرمانان</h2><div style="max-height: 50vh; overflow-y: auto; text-align: right; width: 100%; margin-bottom: 20px;">';
+        if (playersArr.length === 0) {
+            html += '<p style="text-align:center; color:#f4d58d;">هنوز بازیکنی وارد نشده!</p>';
+        } else {
+            playersArr.forEach((p, i) => {
+                var rankIcon = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
+                var isMe = p.nationalId === state.nationalId;
+                var bg = isMe ? 'rgba(74, 222, 128, 0.2)' : 'rgba(0,0,0,0.4)';
+                var border = isMe ? '1px solid #4ade80' : '1px solid transparent';
+                html += `<div style="display: flex; justify-content: space-between; align-items: center; background: ${bg}; border: ${border}; padding: 10px 15px; border-radius: 10px; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 18px; width: 24px;">${rankIcon}</span>
+                        <span style="color: #fff; font-weight: 900;">${p.name}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="color: #4ade80; font-weight: 900;">⚡ ${p.energy}</div>
+                        ${!isMe ? `<button class="btn red" style="min-width: 80px; padding: 5px 10px; font-size: 12px; box-shadow: 0 3px 0 #7f1d1d;" onclick="attackPlayer('${p.nationalId}', '${p.name}')">⚔️ حمله</button>` : ''}
+                    </div>
+                </div>`;
+            });
+        }
+        html += '</div><button class="btn orange" id="bLeagueCloseNew"><span class="icon">✅</span> بستن</button>';
+        box.innerHTML = html;
+        document.getElementById('bLeagueCloseNew').addEventListener('click', () => modal.classList.add('hidden'));
+    } catch (e) {
+        box.innerHTML = '<div class="coming-soon-icon">⚠️</div><h2>خطا</h2><p>اتصال به گیت‌هاب برقرار نشد.</p><button class="btn orange" onclick="document.getElementById(\'leagueModal\').classList.add(\'hidden\')">بستن</button>';
+    }
+});
 document.getElementById('bBattleClose').addEventListener('click', function() { document.getElementById('battleModal').classList.add('hidden'); });
 document.getElementById('bLeagueClose').addEventListener('click', function() { document.getElementById('leagueModal').classList.add('hidden'); });
 
@@ -2541,7 +2607,31 @@ document.getElementById('bArmyBarracksTutorialOk').addEventListener('click', fun
     saveGame();
     setTimeout(openArmyModal, 300);
 });
-
+window.attackPlayer = function(targetId, targetName) {
+    var won = Math.random() > 0.5;
+    if (won) { state.energy += 10; updateHUD(); saveGame(); showHint('🎉 حمله موفق بود! +۱۰ انرژی', 3000); }
+    else { showHint('❌ حمله شکست خورد!', 3000); }
+    
+    var newAttack = { attackerId: state.nationalId, attackerName: state.userName, targetId: targetId, targetName: targetName, timestamp: Date.now(), seen: false };
+    
+    // ارسال به گیت‌هاب
+    (async function() {
+        try {
+            var url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+            var res = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_CONFIG.token}` } });
+            var data = { players: {}, attacks: [] };
+            var sha = null;
+            if (res.ok) { var json = await res.json(); sha = json.sha; data = JSON.parse(atob(json.content)); }
+            data.attacks.push(newAttack);
+            
+            var body = { message: "New Attack", content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))) };
+            if (sha) body.sha = sha;
+            await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${GITHUB_CONFIG.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        } catch(e) {}
+    })();
+    
+    document.getElementById('leagueModal').classList.add('hidden');
+};
 // ============== شروع ==============
 function boot() {
     var hasSave = loadGame();
